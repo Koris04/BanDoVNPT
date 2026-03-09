@@ -1,0 +1,20 @@
+{
+  "name": "code",
+  "version": "1.0.0",
+  "description": "Hệ thống bản đồ VNPT",
+  "license": "ISC",
+  "author": "Đàm Thanh Phong",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "nodemon index.js"
+  },
+  "dependencies": {
+    "ejs": "^4.0.1",
+    "express": "^4.22.1",
+    "express-session": "^1.19.0",
+    "mongodb": "^7.1.0",
+    "mongoose": "^9.2.2",
+    "mssql": "^12.2.0"
+  }
+}
