@@ -1,0 +1,12 @@
+Code: Ban đầu là tính làm ASP PHP
+Sau 1 thời gian thì chuyển sang Node.JS
+
+Cơ sở dữ lieu: SQL Server + MongoDB + MongoDB Compass
+
+Phần mềm bản đồ: Dùng Leaflet với OpenStreetMap làm hiển thị. Dùng kỹ thuật vẽ Đường ranh giới của Leaflet thông qua GeoJSON
+Trong MongoDB, tọa độ được lưu theo (Kinh độ, Vĩ độ). Nhưng trong Leaflet thì tọa độ được lưu theo (Vĩ độ, Kinh độ)
+
+
+Reset cache DNS máy: ipconfig /flushdns
+
+Áp dụng hiệu ứng flyTo của Leaflet để bản đồ "bay" mượt mà từ toàn cảnh tỉnh An Giang vào đúng khu vực của người đăng nhập.
