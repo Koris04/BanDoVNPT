@@ -105,11 +105,17 @@
 
                                                 <td>
                                                     <% if (tk.trang_thai===1) { %>
-                                                        <span class="text-success fw-bold"><i
-                                                                class="bi bi-check-circle-fill"></i> Hoạt động</span>
+                                                        <button class="btn btn-sm btn-outline-danger shadow-sm"
+                                                            title="Khóa tài khoản" data-bs-toggle="modal"
+                                                            data-bs-target="#modalKhoaTaiKhoan"
+                                                            onclick="chuanBiKhoa('<%= tk.ten_dang_nhap %>', '<%= tk.ho_ten %>')">
+                                                            <i class="bi bi-lock-fill"></i>
+                                                        </button>
                                                         <% } else { %>
-                                                            <span class="text-danger fw-bold"><i
-                                                                    class="bi bi-lock-fill"></i> Đã khóa</span>
+                                                            <button class="btn btn-sm btn-secondary shadow-sm"
+                                                                title="Tài khoản này đang bị khóa" disabled>
+                                                                <i class="bi bi-lock"></i>
+                                                            </button>
                                                             <% } %>
                                                 </td>
 
@@ -136,7 +142,65 @@
                     </div>
                 </div>
             </div>
+            <div class="modal fade" id="modalKhoaTaiKhoan" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content rounded-4 border-0 shadow-lg">
+                        <form action="/quanly/taikhoan/khoa_xuly" method="POST">
 
+                            <div class="modal-header bg-danger text-white py-3">
+                                <h5 class="modal-title fw-bold"><i class="bi bi-exclamation-triangle-fill"></i> XÁC NHẬN
+                                    KHÓA TÀI KHOẢN</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                    aria-label="Đóng"></button>
+                            </div>
+
+                            <div class="modal-body p-4">
+                                <div class="alert alert-warning border-0 shadow-sm">
+                                    Bạn đang thực hiện khóa tài khoản: <strong id="ten_hien_thi_khoa"
+                                        class="text-danger"></strong>
+                                </div>
+
+                                <input type="hidden" id="input_ten_dang_nhap_bi_khoa" name="ten_dang_nhap_bi_khoa">
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Lý do khóa tài khoản <span
+                                            class="text-danger">*</span></label>
+                                    <textarea class="form-control border-danger" name="ly_do_khoa" rows="2"
+                                        placeholder="Nhập lý do vi phạm, nghỉ việc, v.v..." required
+                                        autofocus></textarea>
+                                </div>
+
+                                <hr class="text-muted opacity-25">
+
+                                <div class="mb-2">
+                                    <label class="form-label fw-bold text-primary"><i
+                                            class="bi bi-shield-lock-fill"></i> Xác thực bảo mật</label>
+                                    <p class="small text-muted mb-2">Vui lòng nhập mật khẩu CỦA BẠN để xác nhận hành
+                                        động này.</p>
+                                    <input type="password" class="form-control border-primary" name="mat_khau_xac_nhan"
+                                        placeholder="Mật khẩu của bạn" required>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer bg-light mt-2">
+                                <button type="button" class="btn btn-outline-secondary fw-bold rounded-pill px-4"
+                                    data-bs-dismiss="modal">Hủy</button>
+                                <button type="submit" class="btn btn-danger fw-bold rounded-pill px-4 shadow-sm">
+                                    <i class="bi bi-lock-fill"></i> Thực hiện Khóa
+                                </button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                function chuanBiKhoa(tenDangNhap, hoTen) {
+                    document.getElementById('ten_hien_thi_khoa').innerText = hoTen + ' (' + tenDangNhap + ')';
+                    document.getElementById('input_ten_dang_nhap_bi_khoa').value = tenDangNhap;
+                }
+            </script>
             <%- include('footer') %>
                 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
