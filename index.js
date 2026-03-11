@@ -118,6 +118,7 @@ const matkhauDoiXulyRouter = require('./routes/matkhau_doi_xuly');
 const quanlyNguoiDungRouter = require('./routes/quanly_nguoidung');
 const quanlyThemNguoiDungRouter = require('./routes/quanly_them_nguoidung');
 const quanlyThemNguoiDungXulyRouter = require('./routes/quanly_them_nguoidung_xuly');
+const quanlyKhoaTaiKhoanXulyRouter = require('./routes/quanly_khoa_taikhoan_xuly');
 
 // Khai báo tiền tố cho các đường dẫn
 app.use('/', indexRouter);                  //Các trang chung
@@ -135,6 +136,7 @@ app.use('/taikhoan', matkhauDoiXulyRouter);    //Xử lý đổi mật khẩu
 app.use('/quanly/taikhoan', quanlyNguoiDungRouter);  //Phân hệ quản lý người dùng
 app.use('/quanly/taikhoan', quanlyThemNguoiDungRouter); //Giao diện thêm người dùng mới
 app.use('/quanly/taikhoan', quanlyThemNguoiDungXulyRouter); //Xử lý thêm người dùng mới
+app.use('/quanly/taikhoan', quanlyKhoaTaiKhoanXulyRouter); //Xử lý khóa tài khoản
 
 //KHỞI CHẠY SERVER
 app.listen(port, () => {

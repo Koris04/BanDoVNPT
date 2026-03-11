@@ -21,7 +21,8 @@ CREATE TABLE TaiKhoan (
     mat_khau VARCHAR(255) NOT NULL,
     vai_tro_id INT,
     trang_thai TINYINT DEFAULT 1, -- 1: Hoạt động, 0: Bị khóa
-    FOREIGN KEY (vai_tro_id) REFERENCES VaiTro(id)
+    FOREIGN KEY (vai_tro_id) REFERENCES VaiTro(id),
+    ly_do_khoa NVARCHAR(500)
 );
 -- Thêm tài khoản
 INSERT INTO TaiKhoan (ten_dang_nhap, mat_khau, ho_ten, so_dien_thoai, dia_chi, vai_tro_id) 
