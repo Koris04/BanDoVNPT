@@ -124,6 +124,7 @@ const quanlyChiTietNguoiDungRouter = require('./routes/quanly_chitiet_nguoidung'
 const quanlyChiTietNguoiDungXulyRouter = require('./routes/quanly_chitiet_nguoidung_xuly');
 const quanlyCapNhatNguoiDungRouter = require('./routes/quanly_capnhat_nguoidung');
 const quanlyCapNhatNguoiDungXulyRouter = require('./routes/quanly_capnhat_nguoidung_xuly');
+const goicuocXoaXulyRouter = require('./routes/goicuoc_xoa_xuly');
 
 // Khai báo tiền tố cho các đường dẫn
 app.use('/', indexRouter);                  //Các trang chung
@@ -148,6 +149,7 @@ app.use('/quanly/taikhoan', quanlyChiTietNguoiDungRouter); //Giao diện chi ti�
 app.use('/quanly/taikhoan', quanlyChiTietNguoiDungXulyRouter); //Xử lý xác thực bảo mật để xem thông tin nhạy cảm trong chi tiết người dùng
 app.use('/quanly/taikhoan', quanlyCapNhatNguoiDungRouter); //Giao diện cập nhật người dùng
 app.use('/quanly/taikhoan', quanlyCapNhatNguoiDungXulyRouter); //Xử lý cập nhật người dùng
+app.use('/quanly/goicuoc', goicuocXoaXulyRouter); //Xử lý xóa gói cước
 
 //Khởi chạy Server
 app.listen(port, () => {
