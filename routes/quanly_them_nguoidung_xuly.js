@@ -25,7 +25,7 @@ router.post('/them_xuly', kiemTraDangNhap, kiemTraQuyenQuanTri, async (req, res)
 
         let pool = await sql.connect(sqlConfig);
 
-        //Kiểm tra xem tên đăng nhập có bị trùng chưa
+        //Kiểm tra xem tên đăng nhập có bị trùng không
         let checkExist = await pool.request()
             .input('user', sql.VarChar, ten_dang_nhap)
             .query('SELECT ten_dang_nhap FROM TaiKhoan WHERE ten_dang_nhap = @user');

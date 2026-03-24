@@ -1,12 +1,18 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
+const hienThiLoiHeThong = require('./xuly_loi');
 
 const DiemKetNoi = mongoose.model('DiemKetNoi');
 
 //Route: Giao diện chính bản đồ
 router.get('/', (req, res) => {
-    res.render('views', { title: 'Bản đồ giám sát mạng lưới', user: req.session.user || null });
+    try {
+        res.render('views', { title: 'Bản đồ giám sát mạng lưới', user: req.session.user || null });
+    } catch (error) {
+        console.error("Lỗi tải giao diện trang chủ:", error);
+        hienThiLoiHeThong(req, res, "Không thể tải giao diện bản đồ.");
+    }
 });
 
 //Route: API lấy điểm kết nối
@@ -16,7 +22,7 @@ router.get('/api/diem-ket-noi', async (req, res) => {
         res.status(200).json(danhSachDiem);
     } catch (error) {
         console.error("Lỗi API lấy điểm kết nối:", error);
-        res.status(500).json({ message: "Lỗi máy chủ nội bộ" });
+        hienThiLoiHeThong(req, res);
     }
 });
 

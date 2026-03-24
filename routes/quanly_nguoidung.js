@@ -7,8 +7,6 @@ const sqlConfig = {
     user: 'sa', password: 'sql2019', database: 'VNPT_BanDo_Admin', server: 'localhost', port: 1433,
     options: { encrypt: false, trustServerCertificate: true }
 };
-
-//Kiểm tra xem đã đăng nhập chưa
 const kiemTraDangNhap = (req, res, next) => {
     if (req.session.user) next(); else res.redirect('/dangnhap');
 };
