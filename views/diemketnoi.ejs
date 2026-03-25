@@ -272,23 +272,17 @@
                 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
                 <script>
-                    //Lấy toàn bộ mảng gói cước do Node.js truyền từ SQL sang, ép thành mảng JSON để JS đọc được
                     const mangGoiCuoc = JSON.parse("<%- JSON.stringify(typeof danhSachGoiCuoc !== 'undefined' ? danhSachGoiCuoc : []) %>");
 
                     function capNhatGoiCuoc() {
                         const loaiHinh = document.getElementById('chon_loai_hinh').value;
                         const selectGoiCuoc = document.getElementById('chon_goi_cuoc');
-
-                        //Xóa dữ liệu cũ, đưa về trạng thái mặc định
+h
                         selectGoiCuoc.innerHTML = '<option value="">-- Chọn gói cước --</option>';
 
-                        //Nếu người dùng chọn lại option rỗng thì dừng
                         if (!loaiHinh) return;
-
-                        //Lọc ra các gói cước có loại hình chứa chuỗi khớp với lựa chọn (Hộ gia đình/Doanh nghiệp/Điểm công cộng)
                         const danhSachLoc = mangGoiCuoc.filter(gc => gc.loai_hinh_thue_bao && gc.loai_hinh_thue_bao.includes(loaiHinh));
 
-                        //Đổ các gói cước đã lọc vào Select Box thứ 2
                         danhSachLoc.forEach(gc => {
                             const option = document.createElement('option');
                             option.value = gc.id;
