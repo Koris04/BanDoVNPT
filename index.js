@@ -71,6 +71,10 @@ const splitterThemXulyRouter = require('./routes/splitter_them_xuly');
 //--- Quản trị: Điểm kết nối ---
 const vitriRouter = require('./routes/vitri');
 const vitriThemXulyRouter = require('./routes/vitri_them_xuly');
+// --- Báo cáo và giám sát ---
+const baocaoSucoRouter = require('./routes/baocao_suco');
+const baocaoLapXulyRouter = require('./routes/baocao_lap_xuly');
+const baocaoHopDongXulyRouter = require('./routes/baocao_hopdong_xuly');
 
 //4. Khai báo tiền tố cho đường dẫn
 //--- Hệ thống chung và Xác thực ---
@@ -110,6 +114,11 @@ app.use('/quanly/splitter', splitterThemXulyRouter);
 //--- Quản trị: Điểm kết nối ---
 app.use('/quanly/vitri', vitriRouter);
 app.use('/quanly/vitri', vitriThemXulyRouter);
+
+// --- Báo cáo và giám sát ---
+app.use('/baocao', baocaoSucoRouter);
+app.use('/baocao', baocaoLapXulyRouter);
+app.use('/baocao', baocaoHopDongXulyRouter);
 
 //5. Khởi chạy Server
 app.listen(port, () => {
