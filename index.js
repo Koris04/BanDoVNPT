@@ -75,6 +75,7 @@ const vitriThemXulyRouter = require('./routes/vitri_them_xuly');
 const baocaoSucoRouter = require('./routes/baocao_suco');
 const baocaoLapXulyRouter = require('./routes/baocao_lap_xuly');
 const baocaoHopDongXulyRouter = require('./routes/baocao_hopdong_xuly');
+const baocaoLichSuRouter = require('./routes/baocao_lichsu');
 
 // --- Kiểm soát phân quyền ---
 const kiemTraQuyenQuanTri = (req, res, next) => {
@@ -132,6 +133,7 @@ app.use('/quanly/vitri', vitriThemXulyRouter);
 app.use('/baocao', baocaoSucoRouter);
 app.use('/baocao', baocaoLapXulyRouter);
 app.use('/baocao', baocaoHopDongXulyRouter);
+app.use('/baocao', baocaoLichSuRouter);
 
 //5. Khởi chạy Server
 app.listen(port, () => {

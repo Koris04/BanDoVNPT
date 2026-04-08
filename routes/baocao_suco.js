@@ -31,11 +31,14 @@ router.get('/suco', kiemTraDangNhap, async (req, res) => {
         let resultSQL = await pool.request().query(`
             SELECT diem_ket_noi_id 
             FROM BaoCaoSuCo 
-            WHERE trang_thai_xu_ly IN (0, 1) -- 0: Mới lập, 1: Đang xử lý
+            WHERE trang_thai_xu_ly IN (0, 1)
         `);
         
         //Tạo một mảng chứa ID của các điểm đã báo cáo
-        const cacDiemDangXuLy = resultSQL.recordset.map(r => r.diem_ket_noi_id);
+        const mapDangXuLy = {};
+        resultSQL.recordset.forEach(r => {
+            mapDangXuLy[r.diem_ket_noi_id] = r.bao_cao_id;
+        });
 
         res.render('baocao_suco', {
             title: 'Báo cáo sự cố mạng lưới',
@@ -43,7 +46,7 @@ router.get('/suco', kiemTraDangNhap, async (req, res) => {
             danhSachSuCo: danhSachSuCo,
             soLuongDo: diemSuaChua.length,
             soLuongXam: diemThuHoi.length,
-            cacDiemDangXuLy: cacDiemDangXuLy //Gửi danh sách này sang giao diện
+            mapDangXuLy: mapDangXuLy //Gửi danh sách này sang giao diện
         });
 
     } catch (error) {

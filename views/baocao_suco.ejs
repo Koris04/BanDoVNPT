@@ -132,11 +132,13 @@
                                                 <td>
                                                     <% if (diem.trang_thai_ket_noi.mau_sac==='Đỏ' ) { %>
 
-                                                        <% if (cacDiemDangXuLy.includes(diem._id.toString())) { %>
+                                                        <% if (mapDangXuLy && mapDangXuLy[diem._id.toString()]) { %>
                                                             <button
                                                                 class="btn btn-sm btn-warning text-dark fw-bold shadow-sm rounded-pill px-3"
-                                                                disabled title="Đang có kỹ thuật viên xử lý">
-                                                                <i class="bi bi-tools"></i> Đang xử lý...
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#modalCapNhatTienDo"
+                                                                onclick="chuanBiCapNhat('<%= mapDangXuLy[diem._id.toString()] %>', '<%= diem._id %>', '<%= diem.ten_khach_hang %>')">
+                                                                <i class="bi bi-tools"></i> Cập nhật tiến độ
                                                             </button>
                                                             <% } else { %>
                                                                 <button
@@ -235,12 +237,7 @@
 
 
 
-            <script>
-                function chuanBiLapBaoCao(id, tenKhachHang) {
-                    document.getElementById('diem_ket_noi_id').value = id;
-                    document.getElementById('ten_khach_hang_bc').innerText = tenKhachHang;
-                }
-            </script>
+
             <div class="modal fade" id="modalGiaHan" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content rounded-4 border-0 shadow-lg">
@@ -288,14 +285,15 @@
                     <div class="modal-content rounded-4 border-0 shadow-lg">
                         <form action="/baocao/thu-hoi" method="POST">
                             <div class="modal-header bg-secondary text-white py-3">
-                                <h5 class="modal-title fw-bold"><i class="bi bi-exclamation-triangle-fill"></i> Xác nhận thu hồi</h5>
+                                <h5 class="modal-title fw-bold"><i class="bi bi-exclamation-triangle-fill"></i> Xác nhận
+                                    thu hồi</h5>
                                 <button type="button" class="btn-close btn-close-white"
                                     data-bs-dismiss="modal"></button>
                             </div>
                             <div class="modal-body p-4">
                                 <div class="alert alert-warning border-0 shadow-sm">
-                                    Bạn sắp thu hồi thiết bị và hủy đường truyền của khách hàng: <strong id="ten_khach_hang_th"
-                                        class="text-danger"></strong>
+                                    Bạn sắp thu hồi thiết bị và hủy đường truyền của khách hàng: <strong
+                                        id="ten_khach_hang_th" class="text-danger"></strong>
                                 </div>
                                 <input type="hidden" id="diem_id_thuhoi" name="diem_ket_noi_id">
                                 <p class="text-muted small mb-0">Hành động này sẽ <b>XÓA VĨNH VIỄN</b> điểm kết nối này
@@ -313,19 +311,87 @@
                 </div>
             </div>
 
-            <script>
-                function chuanBiGiaHan(id, ten, hanCu) {
-                    document.getElementById('diem_id_giahan').value = id;
-                    document.getElementById('ten_khach_hang_gh').innerText = ten;
-                    document.getElementById('ngay_het_han_cu').innerText = hanCu;
-                }
-                function chuanBiThuHoi(id, ten) {
-                    document.getElementById('diem_id_thuhoi').value = id;
-                    document.getElementById('ten_khach_hang_th').innerText = ten;
-                }
-            </script>
+
+            <div class="modal fade" id="modalCapNhatTienDo" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content rounded-4 border-0 shadow-lg">
+                        <form action="/baocao/cap-nhat" method="POST">
+                            <div class="modal-header bg-warning py-3">
+                                <h5 class="modal-title fw-bold text-dark"><i class="bi bi-tools"></i> Cập nhật tiến độ
+                                    sửa chữa</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Đóng"></button>
+                            </div>
+                            <div class="modal-body p-4">
+                                <div class="alert alert-warning border-0 shadow-sm text-dark">
+                                    Khách hàng: <strong id="ten_khach_hang_cn"></strong>
+                                </div>
+
+                                <input type="hidden" id="bao_cao_id_cn" name="bao_cao_id">
+                                <input type="hidden" id="diem_ket_noi_id_cn" name="diem_ket_noi_id">
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Chi tiết công việc đã thực hiện <span
+                                            class="text-danger">*</span></label>
+                                    <textarea class="form-control shadow-sm border-warning" name="noi_dung_cap_nhat"
+                                        rows="3" placeholder="VD: Đã xuống hiện trường hàn nối lại cáp quang bị đứt..."
+                                        required></textarea>
+                                </div>
+
+                                <div class="mb-2">
+                                    <label class="form-label fw-bold">Trạng thái hiện tại <span
+                                            class="text-danger">*</span></label>
+                                    <select class="form-select border-warning shadow-sm fw-bold text-dark"
+                                        name="trang_thai_moi" required>
+                                        <option value="1">Đang xử lý </option>
+                                        <option value="2">Đã khắc phục xong</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="modal-footer bg-light mt-2">
+                                <button type="button" class="btn btn-outline-secondary fw-bold rounded-pill px-4"
+                                    data-bs-dismiss="modal">Hủy</button>
+                                <button type="submit"
+                                    class="btn btn-warning text-dark fw-bold rounded-pill px-4 shadow-sm">
+                                    <i class="bi bi-send-fill"></i> Lưu nhật ký
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
             <%- include('footer') %>
                 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+                <script>
+                    //Hàm chuẩn bị cho Modal Lập báo cáo
+                    function chuanBiLapBaoCao(id, tenKhachHang) {
+                        document.getElementById('diem_ket_noi_id').value = id;
+                        document.getElementById('ten_khach_hang_bc').innerText = tenKhachHang;
+                    }
+
+                    //Hàm chuẩn bị cho Modal Cập nhật tiến độ
+                    function chuanBiCapNhat(baoCaoId, diemId, tenKhachHang) {
+                        document.getElementById('bao_cao_id_cn').value = baoCaoId;
+                        document.getElementById('diem_ket_noi_id_cn').value = diemId;
+                        document.getElementById('ten_khach_hang_cn').innerText = tenKhachHang;
+                    }
+
+                    //Hàm chuẩn bị cho Modal Gia hạn hợp đồng
+                    function chuanBiGiaHan(id, ten, hanCu) {
+                        document.getElementById('diem_id_giahan').value = id;
+                        document.getElementById('ten_khach_hang_gh').innerText = ten;
+                        document.getElementById('ngay_het_han_cu').innerText = hanCu;
+                    }
+
+                    //Hàm chuẩn bị cho Modal Thu hồi thiết bị
+                    function chuanBiThuHoi(id, ten) {
+                        document.getElementById('diem_id_thuhoi').value = id;
+                        document.getElementById('ten_khach_hang_th').innerText = ten;
+                    }
+                </script>
 </body>
 
 </html>

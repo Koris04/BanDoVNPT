@@ -16,30 +16,37 @@
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="/baocao/suco"><i
                                         class="bi bi-exclamation-triangle text-danger"></i> Cảnh báo sự cố</a></li>
-                            <li><a class="dropdown-item" href="/giamsat/baocao"><i class="bi bi-journal-text"></i> Lịch
+                            <li><a class="dropdown-item" href="/baocao/lichsu"><i class="bi bi-journal-text"></i> Lịch
                                     sử báo cáo</a></li>
                         </ul>
                     </li>
-                    <% if (typeof user !== 'undefined' && user && (user.vai_tro_id === 1 || user.vai_tro_id === 2)) { %>
-            
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">
-                    <i class="bi bi-hdd-network"></i> Quản lý hạ tầng
-                </a>
-                <ul class="dropdown-menu shadow-sm border-0 mt-2">
-                    <li><a class="dropdown-item" href="/quanly/vitri"><i class="bi bi-geo-alt"></i> Điểm kết nối</a></li>
-                    <li><a class="dropdown-item" href="/quanly/splitter"><i class="bi bi-hdd-rack"></i> Tủ Splitter</a></li>
-                    <li><a class="dropdown-item" href="/quanly/goicuoc"><i class="bi bi-wifi"></i> Gói cước</a></li>
-                    
-                    <% if (user.vai_tro_id === 1) { %>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="/quanly/taikhoan"><i class="bi bi-people"></i> Quản lý tài khoản</a></li>
-                    <% } %>
-                </ul>
-            </li>
+                    <% if (typeof user !=='undefined' && user && (user.vai_tro_id===1 || user.vai_tro_id===2)) { %>
 
-        <% } %>
-                    <% } %>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-white" href="#" role="button"
+                                data-bs-toggle="dropdown">
+                                <i class="bi bi-hdd-network"></i> Quản lý hạ tầng
+                            </a>
+                            <ul class="dropdown-menu shadow-sm border-0 mt-2">
+                                <li><a class="dropdown-item" href="/quanly/vitri"><i class="bi bi-geo-alt"></i> Điểm kết
+                                        nối</a></li>
+                                <li><a class="dropdown-item" href="/quanly/splitter"><i class="bi bi-hdd-rack"></i> Tủ
+                                        Splitter</a></li>
+                                <li><a class="dropdown-item" href="/quanly/goicuoc"><i class="bi bi-wifi"></i> Gói
+                                        cước</a></li>
+
+                                <% if (user.vai_tro_id===1) { %>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item" href="/quanly/taikhoan"><i class="bi bi-people"></i>
+                                            Quản lý tài khoản</a></li>
+                                    <% } %>
+                            </ul>
+                        </li>
+
+                        <% } %>
+                            <% } %>
             </ul>
 
             <ul class="navbar-nav ms-3 mb-2 mb-lg-0">
