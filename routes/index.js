@@ -27,7 +27,7 @@ router.get('/api/diem-ket-noi', async (req, res) => {
         res.status(200).json(danhSachDiem);
     } catch (error) {
         console.error("Lỗi API lấy điểm kết nối MongoDB:", error);
-        const hienThiLoiHeThong = require('./routes/xuly_loi');
+        const hienThiLoiHeThong = require('./xuly_loi');
         hienThiLoiHeThong(req, res); 
     }
 });

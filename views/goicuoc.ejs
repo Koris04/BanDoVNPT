@@ -67,12 +67,14 @@
                                     >Điểm công cộng</option>
                             </select>
                         </div>
+                        <% if (typeof user !== 'undefined' && user.vai_tro_id === 1) { %>
                         <div>
                             <button class="btn bg-vnpt text-white fw-bold shadow-sm" data-bs-toggle="modal"
                                 data-bs-target="#modalThemGoiCuoc">
                                 <i class="bi bi-plus-circle"></i> Thêm gói cước
                             </button>
                         </div>
+                        <% } %>
                     </div>
                 </div>
 

@@ -11,7 +11,7 @@ const sqlConfig = {
 router.post('/xoa', async (req, res) => {
     try {
         //Chỉ cho phép Admin thực hiện
-        if (!req.session.user || req.session.user.vai_tro_id !== 1) {
+        if (req.session.user.vai_tro_id !== 1) {
             return res.redirect('/quanly/goicuoc');
         }
 

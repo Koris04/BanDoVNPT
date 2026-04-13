@@ -8,5 +8,3 @@ Trong MongoDB, tọa độ được lưu theo (Kinh độ, Vĩ độ). Nhưng tr
 
 
 Reset cache DNS máy: ipconfig /flushdns
-
-Áp dụng hiệu ứng flyTo của Leaflet để bản đồ "bay" mượt mà từ toàn cảnh tỉnh An Giang vào đúng khu vực của người đăng nhập.

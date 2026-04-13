@@ -78,6 +78,7 @@ router.get('/lichsu', kiemTraDangNhap, async (req, res) => {
         //Gộp dữ liệu Địa chỉ vào Danh sách báo cáo
         danhSachBaoCao = danhSachBaoCao.map(bc => ({
             ...bc,
+            ma_truong_hop: taoMaTruongHop(bc.loai_su_co, bc.truong_hop),
             dia_chi: mapDiaChi[bc.diem_ket_noi_id] || 'Không xác định / Điểm đã bị xóa'
         }));
 

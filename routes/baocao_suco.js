@@ -29,7 +29,7 @@ router.get('/suco', kiemTraDangNhap, async (req, res) => {
         //Kiểm tra SQL Server xem điểm nào đang được xử lý
         let pool = await sql.connect(sqlConfig);
         let resultSQL = await pool.request().query(`
-            SELECT diem_ket_noi_id 
+            SELECT id AS bao_cao_id, diem_ket_noi_id 
             FROM BaoCaoSuCo 
             WHERE trang_thai_xu_ly IN (0, 1)
         `);

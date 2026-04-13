@@ -36,6 +36,22 @@
             color: #6c757d;
             z-index: 1;
         }
+        .btn-layer {
+            width: 105px;
+            border-radius: 14px !important;
+            transition: all 0.2s ease-in-out;
+            background-color: #ffffff;
+        }
+        .btn-layer.active {
+            background-color: #eaf4fc !important;
+            border-color: #0072BC !important;
+            box-shadow: 0 4px 12px rgba(0, 114, 188, 0.2) !important;
+            transform: translateY(-2px);
+        }
+        .btn-layer:hover:not(.active) {
+            background-color: #f1f3f5;
+            transform: translateY(-1px);
+        }
     </style>
 </head>
 
@@ -86,6 +102,24 @@
                     </div>
 
                     <div class="card-body p-2 d-flex flex-column">
+                        <div class="d-flex gap-3 mb-3 justify-content-center map-layer-controls">
+                            <button id="btn-layer-tatca" class="btn border shadow-sm btn-layer active d-flex flex-column align-items-center px-2 py-2" onclick="chuyenLayer('tatca')">
+                                <i class="bi bi-layers-fill text-primary fs-4 mb-1"></i>
+                                <span class="small fw-bold text-dark" style="font-size: 0.75rem;">Lớp tổng hợp</span>
+                            </button>
+                            <button id="btn-layer-khachhang" class="btn border shadow-sm btn-layer d-flex flex-column align-items-center px-2 py-2" onclick="chuyenLayer('khachhang')">
+                                <i class="bi bi-circle-fill text-success fs-4 mb-1"></i>
+                                <span class="small fw-bold text-dark" style="font-size: 0.75rem;">Điểm kết nối</span>
+                            </button>
+                            <button id="btn-layer-sp4" class="btn border shadow-sm btn-layer d-flex flex-column align-items-center px-2 py-2" onclick="chuyenLayer('sp4')">
+                                <i class="bi bi-triangle-fill text-danger fs-4 mb-1"></i>
+                                <span class="small fw-bold text-dark" style="font-size: 0.75rem;">Splitter 1:4</span>
+                            </button>
+                            <button id="btn-layer-sp16" class="btn border shadow-sm btn-layer d-flex flex-column align-items-center px-2 py-2" onclick="chuyenLayer('sp16')">
+                                <i class="bi bi-triangle-half text-info fs-4 mb-1"></i>
+                                <span class="small fw-bold text-dark" style="font-size: 0.75rem;">Splitter 1:16</span>
+                            </button>
+                        </div>
                         <div id="map-container" class="flex-grow-1 rounded border">
                             <p class="mb-0"><i class="bi bi-arrow-clockwise"></i> Đang tải dữ liệu không gian...</p>
                         </div>

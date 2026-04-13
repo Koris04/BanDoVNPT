@@ -112,16 +112,17 @@
                                                 </td>
 
                                                 <td>
-                                                    <% let badgeClass="bg-secondary" ;
-                                                        if(diem.trang_thai_ket_noi.mau_sac==="Xanh" )
-                                                        badgeClass="bg-success" ;
-                                                        if(diem.trang_thai_ket_noi.mau_sac==="Vàng" )
-                                                        badgeClass="bg-warning text-dark" ;
-                                                        if(diem.trang_thai_ket_noi.mau_sac==="Đỏ" )
-                                                        badgeClass="bg-danger" ; %>
-                                                        <span class="badge <%= badgeClass %> px-3 py-2 fs-6">
-                                                            <%= diem.trang_thai_ket_noi.do_tre_ping_ms %> ms
-                                                        </span>
+                                                    <% if(diem.trang_thai_ket_noi.mau_sac==="Xanh" ) { %>
+                                                        <span class="badge bg-success px-3 py-2 fs-6"><i
+                                                                class="bi bi-check-circle"></i> Đang hoạt động</span>
+                                                        <% } else if(diem.trang_thai_ket_noi.mau_sac==="Đỏ" ) { %>
+                                                            <span class="badge bg-danger px-3 py-2 fs-6"><i
+                                                                    class="bi bi-x-circle"></i> Mất kết nối</span>
+                                                            <% } else { %>
+                                                                <span class="badge bg-secondary px-3 py-2 fs-6"><i
+                                                                        class="bi bi-pause-circle"></i> Cần thu
+                                                                    hồi</span>
+                                                                <% } %>
                                                 </td>
 
                                                 <td>
@@ -257,7 +258,7 @@
                                 </div>
 
                             </div>
-                            <div class="modal-footer bg-light">ipconfig /flushdns
+                            <div class="modal-footer bg-light">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
                                 <button type="submit" class="btn bg-vnpt text-white fw-bold"><i
                                         class="bi bi-floppy"></i>Lưu khách hàng</button>
@@ -277,7 +278,6 @@
                     function capNhatGoiCuoc() {
                         const loaiHinh = document.getElementById('chon_loai_hinh').value;
                         const selectGoiCuoc = document.getElementById('chon_goi_cuoc');
-h
                         selectGoiCuoc.innerHTML = '<option value="">-- Chọn gói cước --</option>';
 
                         if (!loaiHinh) return;
