@@ -9,8 +9,10 @@ const sqlConfig = {
 };
 
 const kiemTraDangNhap = (req, res, next) => { if (req.session.user) next(); else res.redirect('/dangnhap'); };
+
 const kiemTraQuyenQuanTri = (req, res, next) => {
-    if (req.session.user.vai_tro_id === 1 || req.session.user.vai_tro_id === 2) next(); 
+    const vaiTro = req.session.user.vai_tro_id;
+    if (vaiTro === 1) next(); 
     else hienThiLoiHeThong(req, res, "TRUY CẬP BỊ TỪ CHỐI!");
 };
 
@@ -18,6 +20,13 @@ const kiemTraQuyenQuanTri = (req, res, next) => {
 router.post('/sua_xuly', kiemTraDangNhap, kiemTraQuyenQuanTri, async (req, res) => {
     try {
         const { ten_dang_nhap, ho_ten, so_dien_thoai, email_lien_he, dia_chi, vai_tro_id } = req.body;
+        
+        const nguoiThucHien = req.session.user.ten_dang_nhap;
+        let vaiTroMoi = vai_tro_id;
+        
+        if (ten_dang_nhap === nguoiThucHien) {
+            vaiTroMoi = req.session.user.vai_tro_id; 
+        }
 
         let pool = await sql.connect(sqlConfig);
 
@@ -26,7 +35,7 @@ router.post('/sua_xuly', kiemTraDangNhap, kiemTraQuyenQuanTri, async (req, res) 
             .input('so_dien_thoai', sql.VarChar, so_dien_thoai)
             .input('email_lien_he', sql.VarChar, email_lien_he || '')
             .input('dia_chi', sql.NVarChar, dia_chi || '')
-            .input('vai_tro_id', sql.Int, vai_tro_id)
+            .input('vai_tro_id', sql.Int, vaiTroMoi)
             .input('user', sql.VarChar, ten_dang_nhap)
             .query(`
                 UPDATE TaiKhoan 

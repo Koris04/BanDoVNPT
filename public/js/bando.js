@@ -169,33 +169,91 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    //6. Xử lý chuyển lớp hiển thị
-    window.chuyenLayer = function (loai) {
-        document.querySelectorAll('.btn-layer').forEach(btn => btn.classList.remove('active'));
-        document.getElementById('btn-layer-' + loai).classList.add('active');
+    //6. Hàm xử lý lọc dữ liệu
+    window.locDuLieu = function () {
 
-        //Bỏ toàn bộ các lớp, trừ lớp VNPT Server
+        const inputTuKhoa = document.getElementById('input-tukhoa');
+        const tuKhoa = inputTuKhoa ? inputTuKhoa.value.toLowerCase().trim() : '';
+        
+        const loaiChecked = document.querySelector('.filter-loai:checked');
+        const loaiDichVu = loaiChecked ? loaiChecked.value : '';
+
+        const khuVucDuocChon = Array.from(document.querySelectorAll('.filter-khuvuc:checked')).map(cb => cb.value);
+
+        const layerChecked = document.querySelector('.filter-layer:checked');
+        const layerHienThi = layerChecked ? layerChecked.value : 'tatca';
+
+
+        //Lọc dữ liệu gốc
+        const danhSachLoc = danhSachGoc.filter(diem => {
+            // Lọc theo từ khóa
+            const thoaManTuKhoa = tuKhoa === '' || 
+                                  diem.ten_khach_hang.toLowerCase().includes(tuKhoa) || 
+                                  diem.dia_chi.toLowerCase().includes(tuKhoa);
+            
+            // Lọc theo Loại dịch vụ
+            const thoaManLoai = loaiDichVu === '' || diem.loai_khach_hang === loaiDichVu;
+
+            // Lọc theo Khu vực
+            let thoaManKhuVuc = khuVucDuocChon.length === 0; //Hiển thị tất cả
+            if (khuVucDuocChon.length > 0) {
+                thoaManKhuVuc = khuVucDuocChon.some(kv => {
+                    const tenPhuong = kv.replace('Phường ', '').trim();
+                    return diem.dia_chi.includes(tenPhuong);
+                });
+            }
+
+            return thoaManTuKhoa && thoaManLoai && thoaManKhuVuc;
+        });
+
+
+        //Vẽ lại bản đồ với dữ liệu đã lọc
+        veCacDiemLenBanDo(danhSachLoc);
+
+
+        //Áp dụng lọc lớp hiển thị
         map.removeLayer(khachHangLayer);
         map.removeLayer(splitter1_4Layer);
         map.removeLayer(splitter1_16Layer);
         map.removeLayer(capQuangLayer);
-        //Gắn lại lớp tùy theo nút được chọn
-        if (loai === 'tatca') {
+
+        // Dựa vào Radio button Layer được chọn để gắn lại lớp tương ứng
+        if (layerHienThi === 'tatca') {
             map.addLayer(khachHangLayer);
             map.addLayer(splitter1_4Layer);
             map.addLayer(splitter1_16Layer);
-            map.addLayer(capQuangLayer); //Hiện lại đường cáp liên kết
-        }
-        else if (loai === 'khachhang') {
+            map.addLayer(capQuangLayer);
+        } else if (layerHienThi === 'khachhang') {
             map.addLayer(khachHangLayer);
-        }
-        else if (loai === 'sp4') {
+        } else if (layerHienThi === 'sp4') {
             map.addLayer(splitter1_4Layer);
-        }
-        else if (loai === 'sp16') {
+        } else if (layerHienThi === 'sp16') {
             map.addLayer(splitter1_16Layer);
         }
+
+        //Cập nhật số lượng điểm sau khi lọc
+        let labelSoLuong = document.getElementById('so-luong-diem-bando');
+        if (labelSoLuong) labelSoLuong.innerText = danhSachLoc.length;
     };
-    window.xoaBoLoc = function () { /*...*/ }
-    window.locDuLieu = function () { /*...*/ }
-});
+
+
+    //7. Reset bộ lọc về mặc định
+    window.xoaBoLoc = function () {
+        //Đặt các Radio button và Checkbox về mặc định
+        const layerTatCa = document.getElementById('layer_tatca');
+        if(layerTatCa) layerTatCa.checked = true;
+
+        const loaiTatCa = document.getElementById('loai_tatca');
+        if(loaiTatCa) loaiTatCa.checked = true;
+
+        document.querySelectorAll('.filter-khuvuc').forEach(cb => cb.checked = false);
+        
+        //Xóa từ khóa tìm kiếm
+        const inputTuKhoa = document.getElementById('input-tukhoa');
+        if (inputTuKhoa) inputTuKhoa.value = '';
+
+        //Chạy lại hàm lọc để khôi phục trạng thái ban đầu của bản đồ
+        locDuLieu();
+    };
+
+}); // Kết thúc DOMContentLoaded

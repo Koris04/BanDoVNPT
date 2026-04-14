@@ -8,13 +8,17 @@ const sqlConfig = {
     options: { encrypt: false, trustServerCertificate: true }
 };
 
-// Route: Xử lý Thêm gói cước mới
-router.post('/them', async (req, res) => {
-    try {
-        if (req.session.user.vai_tro_id !== 1) {
-            return res.redirect('/quanly/goicuoc');
-        }
+const kiemTraDangNhap = (req, res, next) => {
+    if (req.session.user) next(); else res.redirect('/dangnhap');
+};
+const kiemTraQuyenAdmin = (req, res, next) => {
+    if (req.session.user.vai_tro_id === 1) next(); 
+    else hienThiLoiHeThong(req, res, "TRUY CẬP BỊ TỪ CHỐI! Chỉ Quản trị viên mới được thao tác.");
+};
 
+
+router.post('/them', kiemTraDangNhap, kiemTraQuyenAdmin, async (req, res) => {
+    try {
         const { ten_goi_cuoc, loai_hinh_thue_bao } = req.body;
         
         let pool = await sql.connect(sqlConfig);
@@ -26,7 +30,7 @@ router.post('/them', async (req, res) => {
         res.redirect('/quanly/goicuoc');
     } catch (err) {
         console.error("Lỗi thêm gói cước:", err);
-        hienThiLoiHeThong(req, res, "Đã xảy ra lỗi khi lưu dữ liệu gói cước.");
+        hienThiLoiHeThong(req, res);
     }
 });
 
