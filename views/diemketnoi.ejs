@@ -229,40 +229,55 @@
                                     </div>
 
                                     <div class="row g-2 mb-3">
-                                        <div class="col-md-6">
-                                            <label class="form-label fw-bold">Username PPPoE</label>
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold">Mã trạm<span
+                                                    class="text-danger">*</span></label>
+                                            <input type="text" name="sys_id" class="form-control border-success"
+                                                placeholder="VD: AGG-LX-01" required>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold">Username PPPoE <span
+                                                    class="text-danger">*</span></label>
                                             <input type="text" name="username" class="form-control"
                                                 placeholder="hcm_lx_..." required>
                                         </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label fw-bold">Password PPPoE</label>
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold">Password PPPoE <span
+                                                    class="text-danger">*</span></label>
                                             <input type="password" name="password" class="form-control"
                                                 placeholder="******" required>
                                         </div>
                                     </div>
 
-                                    <label class="form-label fw-bold text-success mb-1">Thông số Circuit ID
-                                        (Rack/Shelf/Slot/Port)</label>
+                                    <label class="form-label fw-bold text-success mb-1">Thông số Circuit ID</label>
                                     <div class="row g-2">
-                                        <div class="col-3"><input type="number" name="rack" class="form-control"
-                                                placeholder="Rack" required></div>
-                                        <div class="col-3"><input type="number" name="shelf" class="form-control"
-                                                placeholder="Shelf" required></div>
-                                        <div class="col-3"><input type="number" name="slot" class="form-control"
-                                                placeholder="Slot" required></div>
-                                        <div class="col-3"><input type="number" name="port" class="form-control"
-                                                placeholder="Port" required></div>
+                                        <div class="col-3">
+                                            <input type="text" name="rack" class="form-control border-warning shadow-sm"
+                                                placeholder="Rack (VD: a1)" maxlength="2" pattern="[a-z][a-zA-Z0-9]"
+                                                required>
+                                        </div>
+                                        <div class="col-3">
+                                            <input type="number" name="shelf" class="form-control bg-light text-muted"
+                                                value="0" readonly>
+                                        </div>
+                                        <div class="col-3">
+                                            <input type="number" name="slot" class="form-control" placeholder="Slot"
+                                                min="0" required>
+                                        </div>
+                                        <div class="col-3">
+                                            <input type="number" name="port" class="form-control" placeholder="Port"
+                                                min="1" required>
+                                        </div>
                                     </div>
                                     <div class="form-text mt-2"><i class="bi bi-info-circle"></i> Tham số VPI/VCI sẽ
                                         được tự động gán là 0/33.</div>
-                                </div>
 
-                            </div>
-                            <div class="modal-footer bg-light">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                                <button type="submit" class="btn bg-vnpt text-white fw-bold"><i
-                                        class="bi bi-floppy"></i>Lưu khách hàng</button>
-                            </div>
+                                </div>
+                                <div class="modal-footer bg-light">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                    <button type="submit" class="btn bg-vnpt text-white fw-bold"><i
+                                            class="bi bi-floppy"></i>Lưu khách hàng</button>
+                                </div>
                         </form>
                     </div>
                 </div>

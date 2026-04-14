@@ -20,9 +20,9 @@ const kiemTraDangNhap = (req, res, next) => {
 router.post('/them', kiemTraDangNhap, async (req, res) => {
     try {
         const {
-            ten_khach_hang, dia_chi, kinh_do, vi_do, ping,
+            ten_khach_hang, dia_chi, kinh_do, vi_do,
             goi_cuoc_id, ngay_dang_ky, thoi_gian_su_dung_thang,
-            splitter_id, username, password, rack, shelf, slot, port
+            splitter_id, username, password, sys_id, rack, slot, port
         } = req.body;
 
         //Xử lý gói cước
@@ -51,7 +51,15 @@ router.post('/them', kiemTraDangNhap, async (req, res) => {
             thong_tin_pppoe: {
                 username: username,
                 password: password,
-                circuit_id: { rack, shelf, slot, port, vpi: '0', vci: '33' }
+                circuit_id: {
+                    sys_id: sys_id,
+                    rack: rack,
+                    shelf: '0',
+                    slot: slot,
+                    port: port,
+                    vpi: '0',
+                    vci: '33'
+                }
             },
 
             trang_thai_ket_noi: {
