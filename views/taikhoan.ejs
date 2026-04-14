@@ -67,7 +67,7 @@
                                         <span class="input-group-text locked-icon text-secondary"><i
                                                 class="bi bi-person-bounding-box"></i></span>
                                         <input type="text" class="form-control" name="ten_dang_nhap"
-                                            value="<%= user.ten_dang_nhap %>" readonly>
+                                            value="<%= thongTin.ten_dang_nhap %>" readonly>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -76,7 +76,7 @@
                                         <span class="input-group-text text-primary icon-truong-sua"><i
                                                 class="bi bi-person-fill"></i></span>
                                         <input type="text" class="form-control border-primary truong-cho-phep-sua"
-                                            name="ho_ten" value="<%= user.ho_ten %>" readonly required>
+                                            name="ho_ten" value="<%= thongTin.ho_ten %>" readonly required>
                                     </div>
                                 </div>
 
@@ -86,7 +86,8 @@
                                         <span class="input-group-text text-primary icon-truong-sua"><i
                                                 class="bi bi-telephone-fill"></i></span>
                                         <input type="text" class="form-control border-primary truong-cho-phep-sua"
-                                            name="so_dien_thoai" value="<%= user.so_dien_thoai %>" readonly required>
+                                            name="so_dien_thoai" value="<%= thongTin.so_dien_thoai %>" readonly
+                                            required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -95,7 +96,7 @@
                                         <span class="input-group-text text-primary icon-truong-sua"><i
                                                 class="bi bi-envelope-fill"></i></span>
                                         <input type="text" class="form-control border-primary truong-cho-phep-sua"
-                                            name="email_lien_he" value="<%= user.email_lien_he %>"
+                                            name="email_lien_he" value="<%= thongTin.email_lien_he %>"
                                             placeholder="Chưa nhập..." readonly>
                                     </div>
                                 </div>
@@ -107,7 +108,7 @@
                                             class="input-group-text bg-danger text-white border-danger icon-truong-sua"><i
                                                 class="bi bi-geo-alt-fill"></i></span>
                                         <input type="text" class="form-control border-danger truong-cho-phep-sua"
-                                            name="dia_chi" value="<%= user.dia_chi %>" placeholder="Chưa nhập..."
+                                            name="dia_chi" value="<%= thongTin.dia_chi %>" placeholder="Chưa nhập..."
                                             readonly>
                                     </div>
                                 </div>
@@ -122,8 +123,7 @@
                                         <span class="input-group-text locked-icon text-secondary"><i
                                                 class="bi bi-shield-lock-fill"></i></span>
                                         <input type="text" class="form-control fw-bold text-primary"
-                                            value="<%= user.vai_tro_id == 1 ? 'Quản trị viên' : (user.vai_tro_id == 2 ? 'Quản lý' : 'Nhân viên') %>"
-                                            readonly>
+                                            value="<%= thongTin.ten_vai_tro %>" readonly>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -131,7 +131,7 @@
                                     <div class="input-group shadow-sm">
                                         <span class="input-group-text locked-icon text-secondary"><i
                                                 class="bi bi-activity"></i></span>
-                                        <% if (user.trang_thai==1) { %>
+                                        <% if (thongTin.trang_thai==1) { %>
                                             <input type="text" class="form-control text-success fw-bold"
                                                 value="Đang hoạt động" readonly>
                                             <% } else { %>

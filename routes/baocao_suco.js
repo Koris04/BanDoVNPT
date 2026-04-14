@@ -26,6 +26,11 @@ router.get('/suco', kiemTraDangNhap, async (req, res) => {
         const diemSuaChua = danhSachSuCo.filter(d => d.trang_thai_ket_noi.mau_sac === 'Đỏ');
         const diemThuHoi = danhSachSuCo.filter(d => d.trang_thai_ket_noi.mau_sac === 'Xám');
 
+        //Lấy danh sách điểm Bình thường để hiển thị ở phần "Đang hoạt động"
+        const danhSachBinhThuong = await DiemKetNoi.find({
+            'trang_thai_ket_noi.mau_sac': 'Xanh'
+        }).sort({ ten_khach_hang: 1 });
+
         //Kiểm tra SQL Server xem điểm nào đang được xử lý
         let pool = await sql.connect(sqlConfig);
         let resultSQL = await pool.request().query(`
@@ -46,7 +51,8 @@ router.get('/suco', kiemTraDangNhap, async (req, res) => {
             danhSachSuCo: danhSachSuCo,
             soLuongDo: diemSuaChua.length,
             soLuongXam: diemThuHoi.length,
-            mapDangXuLy: mapDangXuLy //Gửi danh sách này sang giao diện
+            mapDangXuLy: mapDangXuLy,
+            danhSachBinhThuong: danhSachBinhThuong
         });
 
     } catch (error) {

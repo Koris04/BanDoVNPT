@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const sql = require('mssql');
 const hienThiLoiHeThong = require('./xuly_loi');
+const DiemKetNoi = require('../models/DiemKetNoi');
 
 const sqlConfig = {
     user: 'sa', password: 'sql2019', database: 'VNPT_BanDo_Admin', server: 'localhost', port: 1433,
@@ -28,6 +29,13 @@ router.post('/lap-bao-cao', kiemTraDangNhap, async (req, res) => {
                 INSERT INTO BaoCaoSuCo (diem_ket_noi_id, nguoi_tao_id, loai_su_co, mo_ta_ban_dau, thoi_gian_tao, trang_thai_xu_ly)
                 VALUES (@diem_ket_noi_id, @nguoi_tao_id, @loai_su_co, @mo_ta_ban_dau, GETDATE(), 0)
             `);
+        await DiemKetNoi.findByIdAndUpdate(diem_ket_noi_id, {
+            $set: {
+                'trang_thai_ket_noi.mau_sac': 'Đỏ',
+                'trang_thai_ket_noi.ly_do_su_co': loai_su_co,
+                'trang_thai_ket_noi.lan_kiem_tra_cuoi': new Date()
+            }
+        });
 
         res.redirect('/baocao/suco');
 
