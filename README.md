@@ -11,7 +11,7 @@ Lưu ý: Khi tải source code về. Trước hết phải mở Terminal của s
 NODE_ENV=development
 
 # MongoDB URI (ghi đè lên file JSON nếu có)
-MONGO_URI=mongodb+srv://sa:admin123@vnpt-mapping.ep8txj8.mongodb.net/VNPT_Mapping?appName=VNPT-Mapping
+MONGO_URI='url'
 MONGO_DB=VNPT_Mapping
 
 # SQL Server config
