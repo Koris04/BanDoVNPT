@@ -4,6 +4,7 @@ const sql = require('mssql');
 const hienThiLoiHeThong = require('./xuly_loi');
 
 const { sqlConfig } = require('../database');
+
 const kiemTraDangNhap = (req, res, next) => {
     if (req.session.user) next(); else res.redirect('/dangnhap');
 };

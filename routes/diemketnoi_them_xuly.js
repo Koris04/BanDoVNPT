@@ -8,6 +8,7 @@ const DiemKetNoi = require('../models/DiemKetNoi');
 
 //Cấu hình SQL Server
 const { sqlConfig } = require('../database');
+
 const kiemTraDangNhap = (req, res, next) => {
     if (req.session.user) next(); else res.redirect('/dangnhap');
 };
