@@ -3,9 +3,16 @@ const router = express.Router();
 
 //Route: Hiện trang đăng nhập
 router.get('/dangnhap', (req, res) => {
-
-    if (req.session.user) return res.redirect('/');
-    res.render('dangnhap');
+    //Đã đăng nhập
+    if (req.session.user) {
+        return res.redirect('/');
+    }
+    
+    //Chưa đăng nhập
+    res.render('dangnhap', { 
+        layout: false,
+        error: req.flash('error')
+    });
 });
 
 module.exports = router;

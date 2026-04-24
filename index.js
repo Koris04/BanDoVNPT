@@ -3,6 +3,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
 const session = require('express-session');
+const expressLayouts = require('express-ejs-layouts')
+const flash = require('connect-flash');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -16,6 +18,8 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/data', express.static('data'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(expressLayouts);
+app.set('layout', 'layouts/layout');
 
 app.use(session({
     secret: 'vnpt-secret-key-2026',
@@ -23,6 +27,7 @@ app.use(session({
     saveUninitialized: true,
     cookie: { maxAge: 1000 * 60 * 60 * 8 }
 }));
+app.use(flash());
 
 //2. Kết nối MongoDB và khai báo Models
 
