@@ -34,6 +34,7 @@ mongoose.connect(uri)
 
 require('./models/Splitter');
 require('./models/DiemKetNoi');
+require('dotenv').config();
 
 //3. Khai báo Router
 //--- Hệ thống chung & Xác thực ---
@@ -71,8 +72,8 @@ const splitterRouter = require('./routes/splitter');
 const splitterThemXulyRouter = require('./routes/splitter_them_xuly');
 
 //--- Quản trị: Điểm kết nối ---
-const vitriRouter = require('./routes/vitri');
-const vitriThemXulyRouter = require('./routes/vitri_them_xuly');
+const diemKetNoiRouter = require('./routes/diemketnoi');
+const diemKetNoiThemXulyRouter = require('./routes/diemketnoi_them_xuly');
 // --- Báo cáo và giám sát ---
 const baocaoSucoRouter = require('./routes/baocao_suco');
 const baocaoLapXulyRouter = require('./routes/baocao_lap_xuly');
@@ -129,8 +130,8 @@ app.use('/quanly/splitter', splitterRouter);
 app.use('/quanly/splitter', splitterThemXulyRouter);
 
 //--- Quản trị: Điểm kết nối ---
-app.use('/quanly/vitri', vitriRouter);
-app.use('/quanly/vitri', vitriThemXulyRouter);
+app.use('/quanly/diemketnoi', diemKetNoiRouter);
+app.use('/quanly/diemketnoi', diemKetNoiThemXulyRouter);
 
 // --- Báo cáo và giám sát ---
 app.use('/baocao', baocaoSucoRouter);

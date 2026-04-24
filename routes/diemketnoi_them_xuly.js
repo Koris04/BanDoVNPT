@@ -8,8 +8,15 @@ const DiemKetNoi = require('../models/DiemKetNoi');
 
 //Cấu hình SQL Server
 const sqlConfig = {
-    user: 'sa', password: 'sql2019', database: 'VNPT_BanDo_Admin', server: 'localhost', port: 1433,
-    options: { encrypt: false, trustServerCertificate: true }
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    server: process.env.DB_SERVER,
+    port: Number(process.env.DB_PORT),
+    options: {
+        encrypt: false,
+        trustServerCertificate: true
+    }
 };
 
 const kiemTraDangNhap = (req, res, next) => {
@@ -72,7 +79,7 @@ router.post('/them', kiemTraDangNhap, async (req, res) => {
         });
 
         await diemMoi.save();
-        res.redirect('/quanly/vitri');
+        res.redirect('/quanly/diemketnoi');
     } catch (error) {
         console.error("Lỗi khi thêm điểm kết nối:", error);
         hienThiLoiHeThong(req, res);
