@@ -28,24 +28,36 @@
                                 <i class="bi bi-hdd-network"></i> Quản lý
                             </a>
                             <ul class="dropdown-menu shadow-sm border-0 mt-2">
-                                <li><a class="dropdown-item" href="/quanly/diemketnoi"><i class="bi bi-geo-alt"></i> Điểm kết
+                                <li><a class="dropdown-item" href="/quanly/diemketnoi"><i class="bi bi-geo-alt"></i>
+                                        Điểm kết
                                         nối</a></li>
                                 <li><a class="dropdown-item" href="/quanly/splitter"><i class="bi bi-hdd-rack"></i> Tủ
                                         PON</a></li>
                                 <li><a class="dropdown-item" href="/quanly/goicuoc"><i class="bi bi-wifi"></i> Gói
                                         cước</a></li>
-                                    <li>
-                                        <hr class="dropdown-divider">
-                                    </li>
-                                    <li><a class="dropdown-item" href="/quanly/taikhoan"><i class="bi bi-people"></i>
-                                            Quản lý tài khoản</a></li>
-                                    <% } %>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="/quanly/taikhoan"><i class="bi bi-people"></i>
+                                        Quản lý tài khoản</a></li>
+                                <% } %>
                             </ul>
                         </li>
 
                         <% } %>
             </ul>
-
+            <div class="d-none d-lg-flex align-items-center bg-light rounded-pill px-2 py-1 me-4 shadow-sm border">
+                <span class="text-muted small fw-bold me-2 ps-2"><i class="bi bi-display"></i> Giao diện:</span>
+                <button class="btn btn-sm btn-white rounded-circle border shadow-sm" onclick="scaleContent('out')"
+                    title="Thu nhỏ (-10%)"><i class="bi bi-dash"></i></button>
+                <span id="scale-level" class="mx-2 fw-bolder text-primary small"
+                    style="min-width: 45px; text-align: center;">100%</span>
+                <button class="btn btn-sm btn-white rounded-circle border shadow-sm" onclick="scaleContent('in')"
+                    title="Phóng to (+10%)"><i class="bi bi-plus"></i></button>
+                <button class="btn btn-sm btn-white rounded-circle border shadow-sm ms-1"
+                    onclick="scaleContent('reset')" title="Trở về Mặc định"><i
+                        class="bi bi-arrow-clockwise"></i></button>
+            </div>
             <ul class="navbar-nav ms-3 mb-2 mb-lg-0">
                 <% if (typeof user !=='undefined' && user) { %>
                     <li class="nav-item dropdown">
