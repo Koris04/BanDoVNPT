@@ -25,10 +25,15 @@
 <div class="container w-100 mt-5 mb-5" style="max-width: 900px;">
     <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
         <div class="card-header bg-vnpt text-white py-3">
-            <h4 class="mb-0 fw-bold"><i class="bi bi-person-vcard"></i> THÔNG TIN TÀI KHOẢN</h4>
+            <h4 class="mb-0 fw-bold"><i class="bi bi-pencil-square"></i> CẬP NHẬT HỒ SƠ CÁ NHÂN</h4>
         </div>
 
         <div class="card-body p-5">
+            <div class="alert alert-info border-0 shadow-sm mb-4">
+                <i class="bi bi-info-circle-fill"></i> Nếu người dùng có chỉnh sửa các thông tin bên dưới, hãy nhấn <b>Lưu thay
+                    đổi</b> để lưu lại.
+            </div>
+
             <form action="/taikhoan/capnhat" method="POST" id="form-hoso">
                 <div class="row g-4">
 
@@ -41,33 +46,36 @@
                                 value="<%= thongTin.ten_dang_nhap %>" readonly>
                         </div>
                     </div>
+
                     <div class="col-md-6">
-                        <label class="form-label fw-bold">Họ và tên</label>
+                        <label class="form-label fw-bold text-primary">Họ và tên <span
+                                class="text-danger">*</span></label>
                         <div class="input-group shadow-sm">
                             <span class="input-group-text text-primary icon-truong-sua"><i
                                     class="bi bi-person-fill"></i></span>
                             <input type="text" class="form-control border-primary truong-cho-phep-sua" name="ho_ten"
-                                value="<%= thongTin.ho_ten %>" readonly required>
+                                value="<%= thongTin.ho_ten %>" required autofocus>
                         </div>
                     </div>
 
                     <div class="col-md-6">
-                        <label class="form-label fw-bold">Số điện thoại</label>
+                        <label class="form-label fw-bold text-primary">Số điện thoại <span
+                                class="text-danger">*</span></label>
                         <div class="input-group shadow-sm">
                             <span class="input-group-text text-primary icon-truong-sua"><i
                                     class="bi bi-telephone-fill"></i></span>
                             <input type="text" class="form-control border-primary truong-cho-phep-sua"
-                                name="so_dien_thoai" value="<%= thongTin.so_dien_thoai %>" readonly required>
+                                name="so_dien_thoai" value="<%= thongTin.so_dien_thoai %>" required>
                         </div>
                     </div>
+
                     <div class="col-md-6">
-                        <label class="form-label fw-bold">Email/Liên hệ khác</label>
+                        <label class="form-label fw-bold text-primary">Email/Liên hệ khác</label>
                         <div class="input-group shadow-sm">
                             <span class="input-group-text text-primary icon-truong-sua"><i
                                     class="bi bi-envelope-fill"></i></span>
                             <input type="text" class="form-control border-primary truong-cho-phep-sua"
-                                name="email_lien_he" value="<%= thongTin.email_lien_he %>" placeholder="Chưa nhập..."
-                                readonly>
+                                name="email_lien_he" value="<%= thongTin.email_lien_he %>" placeholder="Chưa nhập...">
                         </div>
                     </div>
 
@@ -77,7 +85,7 @@
                             <span class="input-group-text bg-danger text-white border-danger icon-truong-sua"><i
                                     class="bi bi-geo-alt-fill"></i></span>
                             <input type="text" class="form-control border-danger truong-cho-phep-sua" name="dia_chi"
-                                value="<%= thongTin.dia_chi %>" placeholder="Chưa nhập..." readonly>
+                                value="<%= thongTin.dia_chi %>" placeholder="Chưa nhập...">
                         </div>
                     </div>
 
@@ -112,12 +120,12 @@
                 </div>
 
                 <div class="d-flex justify-content-end mt-5 pt-3 border-top">
-                    <a href="/" class="btn btn-outline-secondary me-2 fw-bold px-4 rounded-pill shadow-sm">
-                        Quay lại
+                    <a href="/taikhoan/hoso" class="btn btn-outline-secondary me-2 fw-bold px-4 rounded-pill shadow-sm">
+                        <i class="bi bi-x-circle"></i> Hủy
                     </a>
-                    <a href="/taikhoan/capnhat" class="btn bg-vnpt text-white fw-bold px-4 rounded-pill shadow-sm">
-                        <i class="bi bi-pencil-square"></i> Cập nhật hồ sơ
-                    </a>
+                    <button type="submit" class="btn bg-vnpt text-white fw-bold px-4 rounded-pill shadow-sm">
+                        <i class="bi bi-floppy"></i> Lưu thay đổi
+                    </button>
                 </div>
             </form>
         </div>
