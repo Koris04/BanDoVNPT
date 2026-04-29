@@ -41,7 +41,7 @@ router.get('/suco', kiemTraDangNhap, async (req, res) => {
             mapDangXuLy[r.diem_ket_noi_id] = r.bao_cao_id;
         });
 
-        res.render('baocao_suco', {
+        res.render('pages/baocao_suco', {
             title: 'Báo cáo sự cố mạng lưới',
             user: req.session.user,
             danhSachSuCo: danhSachSuCo,

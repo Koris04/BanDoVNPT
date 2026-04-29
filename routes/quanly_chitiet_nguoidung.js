@@ -26,7 +26,7 @@ router.get('/chitiet/:username', kiemTraDangNhap, kiemTraQuyenQuanTri, async (re
 
         if (result.recordset.length === 0) return hienThiLoiHeThong(req, res, "Không tìm thấy người dùng này!");
 
-        res.render('quanly_chitiet_nguoidung', {
+        res.render('pages/quanly_chitiet_nguoidung', {
             title: 'Chi tiết tài khoản',
             user: req.session.user,
             taiKhoanChiTiet: result.recordset[0],

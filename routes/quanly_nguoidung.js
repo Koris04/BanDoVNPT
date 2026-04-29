@@ -35,7 +35,7 @@ router.get('/', kiemTraDangNhap, kiemTraQuyenQuanTri, async (req, res) => {
             ORDER BY tk.vai_tro_id ASC, tk.ho_ten ASC
         `);
 
-        res.render('quanly_nguoidung', {
+        res.render('pages/quanly_nguoidung', {
             title: 'Quản lý người dùng',
             user: req.session.user,
             danhSachTaiKhoan: result.recordset

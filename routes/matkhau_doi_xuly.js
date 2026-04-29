@@ -22,7 +22,7 @@ router.post('/matkhau_doi_xacthuc', kiemTraDangNhap, async (req, res) => {
 
         if (result.recordset.length > 0) {
             //Đúng mật khẩu
-            res.render('matkhau_doi', {
+           res.render('pages/matkhau_doi', {
                 title: 'Cập nhật mật khẩu',
                 user: req.session.user,
                 step: 2, 
@@ -31,7 +31,7 @@ router.post('/matkhau_doi_xacthuc', kiemTraDangNhap, async (req, res) => {
             });
         } else {
             //Sai mật khẩu
-            res.render('matkhau_doi', {
+            res.render('pages/matkhau_doi', {
                 title: 'Cập nhật mật khẩu',
                 user: req.session.user,
                 step: 1,
@@ -51,7 +51,7 @@ router.post('/matkhau_doi_xuly', kiemTraDangNhap, async (req, res) => {
 
         //Kiểm tra khớp mật khẩu
         if (mat_khau_moi !== nhap_lai_mat_khau_moi) {
-            return res.render('matkhau_doi', {
+            return res.render('pages/matkhau_doi', {
                 title: 'Cập nhật mật khẩu', user: req.session.user, step: 2, tenDangNhapXacThuc: tenDangNhap,
                 error: 'Mật khẩu nhập lại không khớp. Vui lòng thử lại!'
             });

@@ -23,7 +23,7 @@ router.get('/sua/:username', kiemTraDangNhap, kiemTraQuyenQuanTri, async (req, r
             return hienThiLoiHeThong(req, res, "Không tìm thấy tài khoản cần sửa!");
         }
 
-        res.render('quanly_capnhat_nguoidung', {
+       res.render('pages/quanly_capnhat_nguoidung', {
             title: 'Cập nhật tài khoản',
             user: req.session.user,
             taiKhoanSua: result.recordset[0]

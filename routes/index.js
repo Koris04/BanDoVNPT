@@ -8,7 +8,7 @@ const DiemKetNoi = require('../models/DiemKetNoi');
 //Route: Giao diện chính bản đồ
 router.get('/', (req, res) => {
     try {
-        res.render('views', { title: 'Bản đồ giám sát mạng lưới', user: req.session.user || null });
+        res.render('pages/views', { title: 'Bản đồ giám sát mạng lưới', user: req.session.user || null });
     } catch (error) {
         console.error("Lỗi tải giao diện trang chủ:", error);
         hienThiLoiHeThong(req, res, "Không thể tải giao diện bản đồ.");

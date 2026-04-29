@@ -16,7 +16,7 @@ router.get('/', kiemTraDangNhap, async (req, res) => {
 
         const danhSachSplitterCap1 = await Splitter.find({ loai_splitter: '1:4' });
 
-        res.render('splitter', {
+        res.render('pages/splitter', {
             title: 'Quản lý tủ cáp',
             user: req.session.user,
             danhSachSplitter: danhSachSplitter,

@@ -19,7 +19,7 @@ router.get('/capnhat', kiemTraDangNhap, async (req, res) => {
             .query(`SELECT * FROM TaiKhoan WHERE ten_dang_nhap = @tenDangNhap`);
 
         if (result.recordset.length > 0) {
-            res.render('taikhoan_capnhat', { 
+            res.render('pages/taikhoan_capnhat', { 
                 title: 'Cập nhật hồ sơ', 
                 user: req.session.user,
                 thongTin: result.recordset[0]

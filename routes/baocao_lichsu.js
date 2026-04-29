@@ -75,7 +75,7 @@ router.get('/lichsu', kiemTraDangNhap, async (req, res) => {
             dia_chi: mapDiaChi[bc.diem_ket_noi_id] || 'Không xác định/Điểm đã bị xóa'
         }));
 
-        res.render('baocao_lichsu', {
+       res.render('pages/baocao_lichsu', {
             title: 'Lịch sử báo cáo sự cố',
             user: req.session.user,
             danhSachBaoCao: danhSachBaoCao

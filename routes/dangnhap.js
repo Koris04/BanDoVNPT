@@ -9,7 +9,7 @@ router.get('/dangnhap', (req, res) => {
     }
     
     //Chưa đăng nhập
-    res.render('dangnhap', { 
+    res.render('pages/dangnhap', { 
         layout: false,
         error: req.flash('error')
     });

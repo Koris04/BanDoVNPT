@@ -28,7 +28,7 @@ router.get('/', kiemTraDangNhap, async (req, res) => {
         let pool = await sql.connect(sqlConfig);
         let resultGoiCuoc = await pool.request().query('SELECT id, ten_goi_cuoc, loai_hinh_thue_bao FROM GoiCuoc');
 
-        res.render('diemketnoi', {
+        res.render('pages/diemketnoi', {
             title: 'Điểm kết nối',
             user: req.session.user,
             danhSachDiem: danhSachDiem,

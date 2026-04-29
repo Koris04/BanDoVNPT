@@ -36,7 +36,7 @@ router.get('/', kiemTraDangNhap, async (req, res) => {
             OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY
         `);
 
-        res.render('goicuoc', { title: 'Quản lý gói cước', user: req.session.user, danhSachGoiCuoc: result.recordset, currentPage: page, totalPages: totalPages, loaiHienTai: loaiFilter });
+        res.render('pages/goicuoc', { title: 'Quản lý gói cước', user: req.session.user, danhSachGoiCuoc: result.recordset, currentPage: page, totalPages: totalPages, loaiHienTai: loaiFilter });
     }  catch (error) {
         console.error("Lỗi Server:", error);
         hienThiLoiHeThong(req, res);
