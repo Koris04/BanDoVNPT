@@ -18,6 +18,26 @@
                     <tr>
                         <th class="py-3 text-start ps-4">Khách hàng/Địa chỉ</th>
                         <th class="py-3">Tủ cáp</th>
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label fw-bold text-danger">
+                                <i class="bi bi-geo-alt-fill"></i> Vị trí<span class="text-danger">*</span>
+                            </label>
+
+                            <div class="input-group mb-2 shadow-sm">
+                                <span class="input-group-text bg-light fw-bold text-secondary">Vĩ độ</span>
+                                <input type="number" step="any" name="vi_do" id="vi_do_them"
+                                    class="form-control text-primary fw-bold" required readonly>
+
+                                <span class="input-group-text bg-light fw-bold text-secondary">Kinh độ</span>
+                                <input type="number" step="any" name="kinh_do" id="kinh_do_them"
+                                    class="form-control text-primary fw-bold" required readonly>
+                            </div>
+
+                            <div id="map-them" style="height: 300px; border-radius: 8px; z-index: 1;"
+                                class="border border-primary shadow-sm"></div>
+                            <small class="text-muted mt-1 d-block"><i class="bi bi-info-circle"></i> Gợi ý: Có thể
+                                nhấn giữ và kéo thả điểm ghim màu xanh để tinh chỉnh vị trí.</small>
+                        </div>
                         <th class="py-3 text-start">Tài khoản PPPoE & Circuit ID</th>
                         <th class="py-3">Trạng thái kết nối</th>
                         <th class="py-3">Thao tác</th>
@@ -119,4 +139,42 @@
             selectGoiCuoc.appendChild(option);
         });
     }
+
+    let mapThem;
+    let markerThem;
+
+    document.getElementById('modalThemDiem').addEventListener('shown.bs.modal', function () {
+
+        if (!mapThem) {
+            const defaultLat = 10.3759;
+            const defaultLng = 105.4333;
+
+            mapThem = L.map('map-them').setView([defaultLat, defaultLng], 14);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(mapThem);
+
+            markerThem = L.marker([defaultLat, defaultLng], { draggable: true }).addTo(mapThem);
+
+            document.getElementById('vi_do_them').value = defaultLat;
+            document.getElementById('kinh_do_them').value = defaultLng;
+            mapThem.on('click', function (e) {
+                const lat = e.latlng.lat;
+                const lng = e.latlng.lng;
+                
+                markerThem.setLatLng([lat, lng]);
+                
+                document.getElementById('vi_do_them').value = lat;
+                document.getElementById('kinh_do_them').value = lng;
+            });
+            markerThem.on('dragend', function (e) {
+                const position = markerThem.getLatLng();
+                document.getElementById('vi_do_them').value = position.lat;
+                document.getElementById('kinh_do_them').value = position.lng;
+            });
+            
+        } else {
+            mapThem.invalidateSize();
+        }
+    });
 </script>
