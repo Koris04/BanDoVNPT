@@ -30,7 +30,7 @@
                         <% danhSachSplitter.forEach(function(sp, index) { %>
                             <tr>
                                 <td class="text-center text-muted fw-bold">
-                                    <%= index + 1 %>
+                                    <%= (currentPage - 1) * 10 + index + 1 %>
                                 </td>
                                 <td><span class="fw-bold text-dark"><i class="bi bi-hdd-network"></i>
                                         <%= sp.ten_splitter %>
@@ -80,132 +80,155 @@
         </div>
     </div>
 </div>
+<% if (typeof totalPages !=='undefined' && totalPages> 1) { %>
+    <nav aria-label="Page navigation" class="mt-4 mb-2">
+        <ul class="pagination justify-content-center shadow-sm" style="border-radius: 8px;">
+            <li class="page-item <%= currentPage == 1 ? 'disabled' : '' %>">
+                <a class="page-link" href="/quanly/splitter?page=<%= parseInt(currentPage) - 1 %>">Trước</a>
+            </li>
 
-<div class="modal fade" id="modalThemSplitter" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content border-0 shadow">
-            <div class="modal-header bg-vnpt text-white">
-                <h5 class="modal-title fw-bold"><i class="bi bi-node-plus"></i> THÊM TỦ PON</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <form action="/quanly/splitter/them" method="POST">
-                <div class="modal-body p-4">
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Tên tủ</label>
-                        <input type="text" name="ten_splitter" class="form-control"
-                            placeholder="VD: Tủ cấp 1 - Nguyễn Thái Học..." required>
+            <% for(let i=1; i <=totalPages; i++) { %>
+                <li class="page-item <%= currentPage == i ? 'active' : '' %>">
+                    <a class="page-link <%= currentPage == i ? 'bg-vnpt border-vnpt text-white fw-bold' : 'text-primary' %>"
+                        href="/quanly/splitter?page=<%= i %>">
+                        <%= i %>
+                    </a>
+                </li>
+                <% } %>
+
+                    <li class="page-item <%= currentPage == totalPages ? 'disabled' : '' %>">
+                        <a class="page-link" href="/quanly/splitter?page=<%= parseInt(currentPage) + 1 %>">Sau</a>
+                    </li>
+        </ul>
+    </nav>
+    <% } %>
+        <div class="modal fade" id="modalThemSplitter" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content border-0 shadow">
+                    <div class="modal-header bg-vnpt text-white">
+                        <h5 class="modal-title fw-bold"><i class="bi bi-node-plus"></i> THÊM TỦ PON</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">SysID</label>
-                        <input type="text" name="sys_id" class="form-control text-danger fw-bold" value="AGG-LX-01"
-                            required>
-                    </div>
-                    <div class="col-md-12 mb-3">
-                        <label class="form-label fw-bold text-danger">
-                            <i class="bi bi-geo-alt-fill"></i> Vị trí<span class="text-danger">*</span>
-                        </label>
+                    <form action="/quanly/splitter/them" method="POST">
+                        <div class="modal-body p-4">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Tên tủ</label>
+                                <input type="text" name="ten_splitter" class="form-control"
+                                    placeholder="VD: Tủ cấp 1 - Nguyễn Thái Học..." required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">SysID</label>
+                                <input type="text" name="sys_id" class="form-control text-danger fw-bold"
+                                    value="AGG-LX-01" required>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label fw-bold text-danger">
+                                    <i class="bi bi-geo-alt-fill"></i> Vị trí<span class="text-danger">*</span>
+                                </label>
 
-                        <div class="input-group mb-2 shadow-sm">
-                            <span class="input-group-text bg-light fw-bold text-secondary">Vĩ độ</span>
-                            <input type="number" step="any" name="vi_do" id="vi_do_splitter"
-                                class="form-control text-primary fw-bold" required readonly>
+                                <div class="input-group mb-2 shadow-sm">
+                                    <span class="input-group-text bg-light fw-bold text-secondary">Vĩ độ</span>
+                                    <input type="number" step="any" name="vi_do" id="vi_do_splitter"
+                                        class="form-control text-primary fw-bold" required readonly>
 
-                            <span class="input-group-text bg-light fw-bold text-secondary">Kinh độ</span>
-                            <input type="number" step="any" name="kinh_do" id="kinh_do_splitter"
-                                class="form-control text-primary fw-bold" required readonly>
+                                    <span class="input-group-text bg-light fw-bold text-secondary">Kinh độ</span>
+                                    <input type="number" step="any" name="kinh_do" id="kinh_do_splitter"
+                                        class="form-control text-primary fw-bold" required readonly>
+                                </div>
+
+                                <div id="map-splitter" style="height: 300px; border-radius: 8px; z-index: 1;"
+                                    class="border border-primary shadow-sm"></div>
+                                <small class="text-muted mt-1 d-block"><i class="bi bi-info-circle"></i> Gợi ý: Người
+                                    dùng có
+                                    thể nhấn giữ và kéo thả điểm ghim màu xanh để tinh chỉnh vị trí.</small>
+                            </div>
+
+                            <hr>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-primary">Loại tủ</label>
+                                <select name="loai_splitter" id="loai_splitter" class="form-select border-primary"
+                                    required onchange="kiemTraLoaiSplitter()">
+                                    <option value="1:4">Cấp 1 (Chia 1:4) - Nối thẳng OLT</option>
+                                    <option value="1:16">Cấp 2 (Chia 1:16) - Nối từ tủ Cấp 1</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3 d-none bg-light p-3 border rounded" id="khung_splitter_cha">
+                                <label class="form-label fw-bold text-danger"><i class="bi bi-link-45deg"></i> Nối
+                                    vào tủ Cấp 1 nào?</label>
+                                <select name="splitter_cha_id" class="form-select">
+                                    <option value="">-- Chọn tủ nguồn --</option>
+                                    <% if (typeof danhSachSplitterCap1 !=='undefined' ) { %>
+                                        <% danhSachSplitterCap1.forEach(function(sp) { %>
+                                            <option value="<%= sp._id %>">
+                                                <%= sp.ten_splitter %> (<%= sp.sys_id %>)
+                                            </option>
+                                            <% }); %>
+                                                <% } %>
+                                </select>
+                            </div>
+
                         </div>
-
-                        <div id="map-splitter" style="height: 300px; border-radius: 8px; z-index: 1;"
-                            class="border border-primary shadow-sm"></div>
-                        <small class="text-muted mt-1 d-block"><i class="bi bi-info-circle"></i> Gợi ý: Người dùng có
-                            thể nhấn giữ và kéo thả điểm ghim màu xanh để tinh chỉnh vị trí.</small>
-                    </div>
-
-                    <hr>
-
-                    <div class="mb-3">
-                        <label class="form-label fw-bold text-primary">Loại tủ</label>
-                        <select name="loai_splitter" id="loai_splitter" class="form-select border-primary" required
-                            onchange="kiemTraLoaiSplitter()">
-                            <option value="1:4">Cấp 1 (Chia 1:4) - Nối thẳng OLT</option>
-                            <option value="1:16">Cấp 2 (Chia 1:16) - Nối từ tủ Cấp 1</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-3 d-none bg-light p-3 border rounded" id="khung_splitter_cha">
-                        <label class="form-label fw-bold text-danger"><i class="bi bi-link-45deg"></i> Nối
-                            vào tủ Cấp 1 nào?</label>
-                        <select name="splitter_cha_id" class="form-select">
-                            <option value="">-- Chọn tủ nguồn --</option>
-                            <% if (typeof danhSachSplitterCap1 !=='undefined' ) { %>
-                                <% danhSachSplitterCap1.forEach(function(sp) { %>
-                                    <option value="<%= sp._id %>">
-                                        <%= sp.ten_splitter %> (<%= sp.sys_id %>)
-                                    </option>
-                                    <% }); %>
-                                        <% } %>
-                        </select>
-                    </div>
-
+                        <div class="modal-footer bg-light">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                            <button type="submit" class="btn bg-vnpt text-white fw-bold shadow-sm"><i
+                                    class="bi bi-floppy"></i>
+                                Lưu Tủ</button>
+                        </div>
+                    </form>
                 </div>
-                <div class="modal-footer bg-light">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                    <button type="submit" class="btn bg-vnpt text-white fw-bold shadow-sm"><i class="bi bi-floppy"></i>
-                        Lưu Tủ</button>
-                </div>
-            </form>
+            </div>
         </div>
-    </div>
-</div>
 
-<script>
-    function kiemTraLoaiSplitter() {
-        var loai = document.getElementById('loai_splitter').value;
-        var khungCha = document.getElementById('khung_splitter_cha');
-        if (loai === '1:16') {
-            khungCha.classList.remove('d-none');
-        } else {
-            khungCha.classList.add('d-none');
-        }
-    }
+        <script>
+            function kiemTraLoaiSplitter() {
+                var loai = document.getElementById('loai_splitter').value;
+                var khungCha = document.getElementById('khung_splitter_cha');
+                if (loai === '1:16') {
+                    khungCha.classList.remove('d-none');
+                } else {
+                    khungCha.classList.add('d-none');
+                }
+            }
 
-    let mapSplitter;
-    let markerSplitter;
+            let mapSplitter;
+            let markerSplitter;
 
-    document.getElementById('modalThemSplitter').addEventListener('shown.bs.modal', function () {
+            document.getElementById('modalThemSplitter').addEventListener('shown.bs.modal', function () {
 
-        if (!mapSplitter) {
-            const defaultLat = 10.3759;
-            const defaultLng = 105.4333;
+                if (!mapSplitter) {
+                    const defaultLat = 10.3759;
+                    const defaultLng = 105.4333;
 
-            mapSplitter = L.map('map-splitter').setView([defaultLat, defaultLng], 14);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; OpenStreetMap contributors'
-            }).addTo(mapSplitter);
+                    mapSplitter = L.map('map-splitter').setView([defaultLat, defaultLng], 14);
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; OpenStreetMap contributors'
+                    }).addTo(mapSplitter);
 
-            markerSplitter = L.marker([defaultLat, defaultLng], { draggable: true }).addTo(mapSplitter);
+                    markerSplitter = L.marker([defaultLat, defaultLng], { draggable: true }).addTo(mapSplitter);
 
-            document.getElementById('vi_do_splitter').value = defaultLat;
-            document.getElementById('kinh_do_splitter').value = defaultLng;
+                    document.getElementById('vi_do_splitter').value = defaultLat;
+                    document.getElementById('kinh_do_splitter').value = defaultLng;
 
-            mapSplitter.on('click', function (e) {
-                const lat = e.latlng.lat;
-                const lng = e.latlng.lng;
-                
-                markerSplitter.setLatLng([lat, lng]);
-                
-                document.getElementById('vi_do_splitter').value = lat;
-                document.getElementById('kinh_do_splitter').value = lng;
+                    mapSplitter.on('click', function (e) {
+                        const lat = e.latlng.lat;
+                        const lng = e.latlng.lng;
+
+                        markerSplitter.setLatLng([lat, lng]);
+
+                        document.getElementById('vi_do_splitter').value = lat;
+                        document.getElementById('kinh_do_splitter').value = lng;
+                    });
+
+                    markerSplitter.on('dragend', function (e) {
+                        const position = markerSplitter.getLatLng();
+                        document.getElementById('vi_do_splitter').value = position.lat;
+                        document.getElementById('kinh_do_splitter').value = position.lng;
+                    });
+
+                } else {
+                    mapSplitter.invalidateSize();
+                }
             });
-
-            markerSplitter.on('dragend', function (e) {
-                const position = markerSplitter.getLatLng();
-                document.getElementById('vi_do_splitter').value = position.lat;
-                document.getElementById('kinh_do_splitter').value = position.lng;
-            });
-            
-        } else {
-            mapSplitter.invalidateSize();
-        }
-    });
-</script>
+        </script>

@@ -16,10 +16,20 @@ const kiemTraDangNhap = (req, res, next) => {
 // Route: Trang quản lý điểm kết nối
 router.get('/', kiemTraDangNhap, async (req, res) => {
     try {
+        const limit = 15;
+        const page = parseInt(req.query.page) || 1; 
+        const skip = (page - 1) * limit;
+
+        // Đếm tổng số điểm kết nối
+        const totalDiem = await DiemKetNoi.countDocuments({});
+        const totalPages = Math.ceil(totalDiem / limit);
+
         // Lấy danh sách Điểm kết nối từ MongoDB, có populate thông tin Tủ cấp 2 và sắp xếp theo lần kiểm tra cuối
         const danhSachDiem = await DiemKetNoi.find({})
             .populate('splitter_id')
-            .sort({ 'trang_thai_ket_noi.lan_kiem_tra_cuoi': -1 });
+            .sort({ 'trang_thai_ket_noi.lan_kiem_tra_cuoi': -1 })
+            .skip(skip)
+            .limit(limit);
 
         // Lấy danh sách tủ 1:16 để đổ vào Form thêm mới
         const danhSachSplitter16 = await Splitter.find({ loai_splitter: '1:16' });
@@ -33,7 +43,9 @@ router.get('/', kiemTraDangNhap, async (req, res) => {
             user: req.session.user,
             danhSachDiem: danhSachDiem,
             danhSachSplitter: danhSachSplitter16,
-            danhSachGoiCuoc: resultGoiCuoc.recordset
+            danhSachGoiCuoc: resultGoiCuoc.recordset,
+            currentPage: page,
+            totalPages: totalPages
         });
     }  catch (error) {
         console.error("Lỗi Server:", error);

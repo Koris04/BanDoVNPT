@@ -10,9 +10,18 @@ const kiemTraDangNhap = (req, res, next) => {
 //Trang quản lý danh sách tủ cáp
 router.get('/', kiemTraDangNhap, async (req, res) => {
     try {
+        const limit = 10;
+        const page = parseInt(req.query.page) || 1;
+        const skip = (page - 1) * limit;
+
+        const totalSplitters = await Splitter.countDocuments({});
+        const totalPages = Math.ceil(totalSplitters / limit);
+
         const danhSachSplitter = await Splitter.find({})
             .populate('splitter_cha_id')
-            .sort({ sys_id: 1, loai_splitter: 1 });
+            .sort({ sys_id: 1, loai_splitter: 1 })
+            .skip(skip)
+            .limit(limit);
 
         const danhSachSplitterCap1 = await Splitter.find({ loai_splitter: '1:4' });
 
@@ -20,7 +29,9 @@ router.get('/', kiemTraDangNhap, async (req, res) => {
             title: 'Quản lý tủ cáp',
             user: req.session.user,
             danhSachSplitter: danhSachSplitter,
-            danhSachSplitterCap1: danhSachSplitterCap1
+            danhSachSplitterCap1: danhSachSplitterCap1,
+            currentPage: page,   
+            totalPages: totalPages 
         });
     }  catch (error) {
         console.error("Lỗi Server:", error);
