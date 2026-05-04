@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg bg-vnpt navbar-dark shadow-sm">
+<nav class="navbar navbar-expand-lg bg-vnpt navbar-dark shadow-sm position-relative" style="z-index: 1050;">
     <div class="container-fluid px-4">
         <a class="navbar-brand" href="/" title="Về trang chủ">
             <img src="/images/Mini logo.png" alt="VNPT Logo" height="38" class="bg-white rounded-circle p-1 shadow-sm">
@@ -25,33 +25,34 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white" href="#" role="button"
                                 data-bs-toggle="dropdown">
-                                <i class="bi bi-hdd-network"></i> Quản lý
+                                 <i class="bi bi-hdd-network"></i> Quản lý
                             </a>
                             <ul class="dropdown-menu shadow-sm border-0 mt-2">
-                                <li><a class="dropdown-item" href="/quanly/diemketnoi"><i class="bi bi-geo-alt"></i>
+                               <li><a class="dropdown-item" href="/quanly/diemketnoi"><i class="bi bi-geo-alt"></i>
                                         Điểm kết nối</a></li>
                                 <li><a class="dropdown-item" href="/quanly/splitter"><i class="bi bi-hdd-rack"></i> Tủ
                                         PON</a></li>
                                 <li><a class="dropdown-item" href="/quanly/goicuoc"><i class="bi bi-wifi"></i> Gói
-                                        cước</a></li>
+                                     cước</a></li>
 
                                 <% if (user.vai_tro_id===1) { %>
                                     <li>
-                                        <hr class="dropdown-divider">
+                                       <hr class="dropdown-divider">
                                     </li>
                                     <li><a class="dropdown-item" href="/quanly/taikhoan"><i class="bi bi-people"></i>
                                             Quản lý tài khoản</a></li>
                                     <% } %>
-                            </ul>
+                             </ul>
                         </li>
                         <% } %>
-                            <% } %>
+                           
+                 <% } %>
             </ul>
 
             <div class="d-none d-lg-flex align-items-center bg-light rounded-pill px-2 py-1 me-4 shadow-sm border">
                 <span class="text-muted small fw-bold me-2 ps-2"><i class="bi bi-display"></i> Giao diện:</span>
                 <button class="btn btn-sm btn-white rounded-circle border shadow-sm" onclick="scaleContent('out')"
-                    title="Thu nhỏ (-10%)"><i class="bi bi-dash"></i></button>
+                     title="Thu nhỏ (-10%)"><i class="bi bi-dash"></i></button>
                 <span id="scale-level" class="mx-2 fw-bolder text-primary small"
                     style="min-width: 45px; text-align: center;">100%</span>
                 <button class="btn btn-sm btn-white rounded-circle border shadow-sm" onclick="scaleContent('in')"
@@ -71,13 +72,13 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="/taikhoan/hoso"><i class="bi bi-person-badge"></i> Hồ sơ
-                                    cá nhân</a></li>
+                                     cá nhân</a></li>
                             <li>
                                 <hr class="dropdown-divider">
-                            </li>
+                             </li>
                             <li><a class="dropdown-item text-danger" href="/dangxuat"><i
                                         class="bi bi-box-arrow-right"></i> Đăng xuất</a></li>
-                        </ul>
+                         </ul>
                     </li>
                     <% } else { %>
                         <li class="nav-item">
