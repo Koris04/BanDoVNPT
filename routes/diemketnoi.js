@@ -52,5 +52,60 @@ router.get('/', kiemTraDangNhap, async (req, res) => {
         hienThiLoiHeThong(req, res);
     }
 });
+//Xử lý sửa các điểm kết nối
+router.post('/sua/:id', kiemTraDangNhap, async (req, res) => {
+    try {
+        const {
+            ten_khach_hang, dia_chi, kinh_do, vi_do,
+            goi_cuoc_id, ngay_dang_ky, thoi_gian_su_dung_thang,
+            splitter_id, username, password
+        } = req.body;
+
+        //Xử lý tự động lấy loại khách hàng từ SQL Server
+        let pool = await sql.connect(sqlConfig);
+        let goiCuocInfo = await pool.request()
+            .input('id', sql.Int, goi_cuoc_id)
+            .query('SELECT loai_hinh_thue_bao FROM GoiCuoc WHERE id = @id');
+        let loai_khach_hang = goiCuocInfo.recordset.length > 0 ? goiCuocInfo.recordset[0].loai_hinh_thue_bao : 'Chưa xác định';
+
+        //Xử lý tính toán lại ngày hết hạn
+        const ngayDangKyDate = new Date(ngay_dang_ky);
+        const ngayHetHanDate = new Date(ngayDangKyDate);
+        ngayHetHanDate.setMonth(ngayHetHanDate.getMonth() + parseInt(thoi_gian_su_dung_thang));
+
+        // Cập nhật lên MongoDB
+        await DiemKetNoi.findByIdAndUpdate(req.params.id, {
+            ten_khach_hang, 
+            loai_khach_hang, 
+            dia_chi,
+            vi_tri: { type: 'Point', coordinates: [parseFloat(kinh_do), parseFloat(vi_do)] },
+            thong_tin_hop_dong: { 
+                goi_cuoc_id: parseInt(goi_cuoc_id), 
+                ngay_dang_ky: ngayDangKyDate, 
+                thoi_gian_su_dung_thang: parseInt(thoi_gian_su_dung_thang), 
+                ngay_het_han: ngayHetHanDate 
+            },
+            splitter_id: splitter_id || null,
+            'thong_tin_pppoe.username': username,
+            'thong_tin_pppoe.password': password
+        });
+
+        res.redirect('/quanly/diemketnoi');
+    } catch (error) {
+        console.error("Lỗi khi sửa Điểm kết nối:", error);
+        hienThiLoiHeThong(req, res, "Đã xảy ra lỗi khi cập nhật Điểm kết nối.");
+    }
+});
+
+//Xử lý xóa điểm kết nối
+router.post('/xoa/:id', kiemTraDangNhap, async (req, res) => {
+    try {
+        await DiemKetNoi.findByIdAndDelete(req.params.id);
+        res.redirect('/quanly/diemketnoi');
+    } catch (error) {
+        console.error("Lỗi khi xóa Điểm kết nối:", error);
+        hienThiLoiHeThong(req, res, "Đã xảy ra lỗi khi xóa Khách hàng.");
+    }
+});
 
 module.exports = router;

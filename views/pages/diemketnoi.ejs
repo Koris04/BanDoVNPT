@@ -84,8 +84,25 @@
                                                 <% } %>
                                 </td>
 
-                                <td>
-                                    <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                                <td class="text-center" style="min-width: 100px;">
+                                    <button class="btn btn-sm btn-outline-warning shadow-sm me-1" title="Sửa thông tin"
+                                        onclick="chuanBiSuaDiem('<%= diem._id %>', '<%= diem.ten_khach_hang %>', '<%= diem.dia_chi %>', '<%= diem.loai_khach_hang %>',
+                                         '<%= diem.thong_tin_hop_dong ? diem.thong_tin_hop_dong.goi_cuoc_id : '' %>', 
+                                         '<%= diem.thong_tin_hop_dong && diem.thong_tin_hop_dong.ngay_dang_ky ? diem.thong_tin_hop_dong.ngay_dang_ky.toISOString().split('T')[0] : '' %>', 
+                                         '<%= diem.thong_tin_hop_dong ? diem.thong_tin_hop_dong.thoi_gian_su_dung_thang : 12 %>', '<%= diem.thong_tin_pppoe ? diem.thong_tin_pppoe.username : '' %>', 
+                                         '<%= diem.thong_tin_pppoe ? diem.thong_tin_pppoe.password : '' %>', '<%= diem.splitter_id ? diem.splitter_id._id : '' %>',
+                                          <%= diem.vi_tri.coordinates[1] %>, <%= diem.vi_tri.coordinates[0] %>)"
+                                        data-bs-toggle="modal" data-bs-target="#modalSuaDiem">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </button>
+
+                                    <form action="/diemketnoi/xoa/<%= diem._id %>" method="POST" class="d-inline"
+                                        onsubmit="return confirm('Cảnh báo: Bạn có chắc chắn muốn xóa khách hàng này?');">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger shadow-sm"
+                                            title="Xóa">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                             <% }); %>
@@ -217,7 +234,8 @@
                                     </div>
                                     <div id="map-them" style="height: 300px; border-radius: 8px; z-index: 1;"
                                         class="border border-primary shadow-sm"></div>
-                                    <small class="text-muted mt-1 d-block"><i class="bi bi-info-circle"></i> Gợi ý: Người dùng
+                                    <small class="text-muted mt-1 d-block"><i class="bi bi-info-circle"></i> Gợi ý:
+                                        Người dùng
                                         có thể nhấn giữ và kéo thả điểm ghim màu xanh để tinh chỉnh vị trí.</small>
                                 </div>
 
@@ -228,6 +246,109 @@
                                 data-bs-dismiss="modal">Hủy bỏ</button>
                             <button type="submit" class="btn bg-vnpt text-white fw-bold rounded-pill px-4 shadow-sm"><i
                                     class="bi bi-floppy"></i> Lưu khách hàng</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="modalSuaDiem" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content border-0 shadow-lg rounded-4">
+                    <div class="modal-header bg-warning text-dark py-3">
+                        <h5 class="modal-title fw-bold"><i class="bi bi-pencil-square"></i> CẬP NHẬT ĐIỂM KẾT NỐI</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form id="formSuaDiem" method="POST">
+                        <div class="modal-body p-4">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold">Tên khách hàng</label>
+                                    <input type="text" name="ten_khach_hang" id="sua_ten_khach_hang"
+                                        class="form-control border-warning" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold">Địa chỉ lắp đặt</label>
+                                    <input type="text" name="dia_chi" id="sua_dia_chi" class="form-control" required>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold">Ngày đăng ký</label>
+                                    <input type="date" name="ngay_dang_ky" id="sua_ngay_dang_ky" class="form-control"
+                                        required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold">Thời gian sử dụng (Tháng)</label>
+                                    <input type="number" name="thoi_gian_su_dung_thang" id="sua_thoi_gian_su_dung_thang"
+                                        class="form-control" required>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold text-primary">Loại hình thuê bao</label>
+                                    <select id="sua_chon_loai_hinh" class="form-select border-primary"
+                                        onchange="capNhatGoiCuocSua()" required>
+                                        <option value="Hộ gia đình">Hộ gia đình</option>
+                                        <option value="Doanh nghiệp">Doanh nghiệp</option>
+                                        <option value="Điểm công cộng">Điểm công cộng</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold text-primary">Gói cước đăng ký</label>
+                                    <select name="goi_cuoc_id" id="sua_chon_goi_cuoc" class="form-select border-primary"
+                                        required>
+                                        <option value="">-- Chọn gói cước --</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-12">
+                                    <hr class="text-muted opacity-25">
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label fw-bold">PPPoE Account</label>
+                                    <input type="text" name="username" id="sua_username"
+                                        class="form-control text-primary fw-bold">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label fw-bold">PPPoE Password</label>
+                                    <input type="text" name="password" id="sua_password" class="form-control">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label fw-bold text-info">Cắm vào Tủ Splitter</label>
+                                    <select name="splitter_id" id="sua_splitter_id" class="form-select border-info">
+                                        <option value="">-- Chọn tủ cáp --</option>
+                                        <% if (typeof danhSachSplitter !=='undefined' ) { %>
+                                            <% danhSachSplitter.forEach(sp=> { %>
+                                                <option value="<%= sp._id %>">
+                                                    <%= sp.ten_splitter %> (<%= sp.sys_id %>)
+                                                </option>
+                                                <% }) %>
+                                                    <% } %>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-12 mb-3">
+                                    <label class="form-label fw-bold text-danger">
+                                        <i class="bi bi-geo-alt-fill"></i> Vị trí <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group mb-2 shadow-sm">
+                                        <span class="input-group-text bg-light fw-bold text-secondary">Vĩ độ</span>
+                                        <input type="number" step="any" name="vi_do" id="sua_vi_do"
+                                            class="form-control text-primary fw-bold" required readonly>
+                                        <span class="input-group-text bg-light fw-bold text-secondary">Kinh độ</span>
+                                        <input type="number" step="any" name="kinh_do" id="sua_kinh_do"
+                                            class="form-control text-primary fw-bold" required readonly>
+                                    </div>
+                                    <div id="map-sua-diem" style="height: 300px; border-radius: 8px; z-index: 1;"
+                                        class="border border-primary shadow-sm"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer bg-light">
+                            <button type="button" class="btn btn-secondary fw-bold rounded-pill px-4"
+                                data-bs-dismiss="modal">Hủy bỏ</button>
+                            <button type="submit" class="btn btn-warning fw-bold rounded-pill px-4 shadow-sm"><i
+                                    class="bi bi-floppy"></i> Lưu cập nhật</button>
                         </div>
                     </form>
                 </div>
