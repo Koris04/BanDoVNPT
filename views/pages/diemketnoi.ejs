@@ -355,59 +355,132 @@
             </div>
         </div>
         <script>
-            const mangGoiCuoc = JSON.parse("<%- JSON.stringify(typeof danhSachGoiCuoc !== 'undefined' ? danhSachGoiCuoc : []) %>");
+    const mangGoiCuoc = <%- JSON.stringify(typeof danhSachGoiCuoc !== 'undefined' ? danhSachGoiCuoc : []) %>;
 
-            function capNhatGoiCuoc() {
-                const loaiHinh = document.getElementById('chon_loai_hinh').value;
-                const selectGoiCuoc = document.getElementById('chon_goi_cuoc');
-                selectGoiCuoc.innerHTML = '<option value="">-- Chọn gói cước --</option>';
+    function capNhatGoiCuoc() {
+        const loaiHinh = document.getElementById('chon_loai_hinh').value;
+        const selectGoiCuoc = document.getElementById('chon_goi_cuoc');
+        selectGoiCuoc.innerHTML = '<option value="">-- Chọn gói cước --</option>';
 
-                if (!loaiHinh) return;
-                const danhSachLoc = mangGoiCuoc.filter(gc => gc.loai_hinh_thue_bao && gc.loai_hinh_thue_bao.includes(loaiHinh));
+        if (!loaiHinh) return;
+        const danhSachLoc = mangGoiCuoc.filter(gc => gc.loai_hinh_thue_bao && gc.loai_hinh_thue_bao.includes(loaiHinh));
 
-                danhSachLoc.forEach(gc => {
-                    const option = document.createElement('option');
-                    option.value = gc.id;
-                    option.textContent = gc.ten_goi_cuoc;
-                    selectGoiCuoc.appendChild(option);
-                });
-            }
+        danhSachLoc.forEach(gc => {
+            const option = document.createElement('option');
+            option.value = gc.id;
+            option.textContent = gc.ten_goi_cuoc;
+            selectGoiCuoc.appendChild(option);
+        });
+    }
 
-            let mapThem;
-            let markerThem;
+    let mapThem;
+    let markerThem;
 
-            document.getElementById('modalThemDiem').addEventListener('shown.bs.modal', function () {
+    document.getElementById('modalThemDiem').addEventListener('shown.bs.modal', function () {
+        if (!mapThem) {
+            const defaultLat = 10.3759;
+            const defaultLng = 105.4333;
 
-                if (!mapThem) {
-                    const defaultLat = 10.3759;
-                    const defaultLng = 105.4333;
+            mapThem = L.map('map-them').setView([defaultLat, defaultLng], 14);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(mapThem);
 
-                    mapThem = L.map('map-them').setView([defaultLat, defaultLng], 14);
-                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        attribution: '&copy; OpenStreetMap contributors'
-                    }).addTo(mapThem);
+            markerThem = L.marker([defaultLat, defaultLng], { draggable: true }).addTo(mapThem);
 
-                    markerThem = L.marker([defaultLat, defaultLng], { draggable: true }).addTo(mapThem);
+            document.getElementById('vi_do_them').value = defaultLat;
+            document.getElementById('kinh_do_them').value = defaultLng;
+            
+            setTimeout(() => mapThem.invalidateSize(), 10);
 
-                    document.getElementById('vi_do_them').value = defaultLat;
-                    document.getElementById('kinh_do_them').value = defaultLng;
-                    mapThem.on('click', function (e) {
-                        const lat = e.latlng.lat;
-                        const lng = e.latlng.lng;
-
-                        markerThem.setLatLng([lat, lng]);
-
-                        document.getElementById('vi_do_them').value = lat;
-                        document.getElementById('kinh_do_them').value = lng;
-                    });
-                    markerThem.on('dragend', function (e) {
-                        const position = markerThem.getLatLng();
-                        document.getElementById('vi_do_them').value = position.lat;
-                        document.getElementById('kinh_do_them').value = position.lng;
-                    });
-
-                } else {
-                    mapThem.invalidateSize();
-                }
+            mapThem.on('click', function (e) {
+                markerThem.setLatLng([e.latlng.lat, e.latlng.lng]);
+                document.getElementById('vi_do_them').value = e.latlng.lat;
+                document.getElementById('kinh_do_them').value = e.latlng.lng;
             });
-        </script>
+            
+            markerThem.on('dragend', function (e) {
+                const position = markerThem.getLatLng();
+                document.getElementById('vi_do_them').value = position.lat;
+                document.getElementById('kinh_do_them').value = position.lng;
+            });
+        } else {
+            setTimeout(() => mapThem.invalidateSize(), 10);
+        }
+    });
+
+    function capNhatGoiCuocSua(selectedGoiCuocId = null) {
+        const loaiHinh = document.getElementById('sua_chon_loai_hinh').value;
+        const selectGoiCuoc = document.getElementById('sua_chon_goi_cuoc');
+        selectGoiCuoc.innerHTML = '<option value="">-- Chọn gói cước --</option>';
+
+        if (!loaiHinh) return;
+        const danhSachLoc = mangGoiCuoc.filter(gc => gc.loai_hinh_thue_bao && gc.loai_hinh_thue_bao.includes(loaiHinh));
+
+        danhSachLoc.forEach(gc => {
+            const option = document.createElement('option');
+            option.value = gc.id;
+            option.textContent = gc.ten_goi_cuoc;
+            if (selectedGoiCuocId && gc.id == selectedGoiCuocId) option.selected = true;
+            selectGoiCuoc.appendChild(option);
+        });
+    }
+
+    let mapSuaDiem;
+    let markerSuaDiem;
+    let currentLatSuaDiem = 10.3759;
+    let currentLngSuaDiem = 105.4333;
+
+    function chuanBiSuaDiem(id, ten, diaChi, loaiHinh, goiCuocId, ngayDK, thoiGian, user, pass, splitterId, lat, lng) {
+        document.getElementById('formSuaDiem').action = '/diemketnoi/sua/' + id;
+        
+        document.getElementById('sua_ten_khach_hang').value = ten;
+        document.getElementById('sua_dia_chi').value = diaChi;
+        document.getElementById('sua_chon_loai_hinh').value = loaiHinh;
+        document.getElementById('sua_ngay_dang_ky').value = ngayDK;
+        document.getElementById('sua_thoi_gian_su_dung_thang').value = thoiGian;
+        document.getElementById('sua_username').value = user;
+        document.getElementById('sua_password').value = pass;
+        document.getElementById('sua_splitter_id').value = splitterId;
+        
+        capNhatGoiCuocSua(goiCuocId);
+
+        document.getElementById('sua_vi_do').value = lat;
+        document.getElementById('sua_kinh_do').value = lng;
+        currentLatSuaDiem = lat;
+        currentLngSuaDiem = lng;
+
+        if (mapSuaDiem && markerSuaDiem) {
+            let newLatLng = new L.LatLng(lat, lng);
+            markerSuaDiem.setLatLng(newLatLng);
+            mapSuaDiem.setView(newLatLng, 17);
+        }
+    }
+
+    document.getElementById('modalSuaDiem').addEventListener('shown.bs.modal', function () {
+        if (!mapSuaDiem) {
+            mapSuaDiem = L.map('map-sua-diem').setView([currentLatSuaDiem, currentLngSuaDiem], 17);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap'
+            }).addTo(mapSuaDiem);
+
+            markerSuaDiem = L.marker([currentLatSuaDiem, currentLngSuaDiem], { draggable: true }).addTo(mapSuaDiem);
+
+            setTimeout(() => mapSuaDiem.invalidateSize(), 10);
+
+            mapSuaDiem.on('click', function (e) {
+                markerSuaDiem.setLatLng([e.latlng.lat, e.latlng.lng]);
+                document.getElementById('sua_vi_do').value = e.latlng.lat;
+                document.getElementById('sua_kinh_do').value = e.latlng.lng;
+            });
+
+            markerSuaDiem.on('dragend', function (e) {
+                const position = markerSuaDiem.getLatLng();
+                document.getElementById('sua_vi_do').value = position.lat;
+                document.getElementById('sua_kinh_do').value = position.lng;
+            });
+        } else {
+            setTimeout(() => mapSuaDiem.invalidateSize(), 10);
+        }
+    });
+</script>
