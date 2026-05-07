@@ -9,17 +9,17 @@ const kiemTraDangNhap = (req, res, next) => {
     if (req.session.user) next(); else res.redirect('/dangnhap');
 };
 
-//ROUTE: Gia hạn hợp đồng
+//Gia hạn hợp đồng
 router.post('/gia-han', kiemTraDangNhap, async (req, res) => {
     try {
         const { diem_ket_noi_id, so_thang_gia_han } = req.body;
         const soThang = parseInt(so_thang_gia_han);
 
-        // Tìm điểm kết nối
+        //Tìm điểm kết nối
         const diem = await DiemKetNoi.findById(diem_ket_noi_id);
         if (!diem) return res.status(404).send("Không tìm thấy điểm kết nối.");
 
-        // Tính toán ngày hết hạn mới
+        //Tính toán ngày hết hạn mới
         let ngayHetHanHienTai = new Date(diem.thong_tin_hop_dong.ngay_het_han);
         ngayHetHanHienTai.setMonth(ngayHetHanHienTai.getMonth() + soThang);
 
@@ -40,7 +40,7 @@ router.post('/gia-han', kiemTraDangNhap, async (req, res) => {
     }
 });
 
-//Route: Thu hồi và Hủy
+//Thu hồi và Hủy
 router.post('/thu-hoi', kiemTraDangNhap, async (req, res) => {
     try {
         const { diem_ket_noi_id } = req.body;

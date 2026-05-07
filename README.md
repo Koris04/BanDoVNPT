@@ -56,3 +56,7 @@ const connectMongoDB = async () => {
 };
 
 module.exports = { connectMongoDB };--
+
+Tài khoản để thầy cô có thể sử dụng để test bài:
+Tên đăng nhập: taikhoan_test
+Mật khẩu: 123456
