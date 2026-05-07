@@ -564,7 +564,7 @@
             let currentLngSuaDiem = 105.4333;
 
             function chuanBiSuaDiem(id, ten, diaChi, loaiHinh, goiCuocId, ngayDK, thoiGian, user, pass, splitterId, lat, lng, sysId, rack, slot, port) {
-                document.getElementById('formSuaDiem').action = '/quanly/diemketnoi/sua/' + id;
+                document.getElementById('formSuaDiem').action = '/quanly/diemketnoi/sua/' + id + '?page=<%= currentPage %>';
 
                 document.getElementById('sua_ten_khach_hang').value = ten;
                 document.getElementById('sua_dia_chi').value = diaChi;
@@ -634,6 +634,6 @@
                 document.getElementById('sua_sys_id_hidden').value = sysId || '';
             }
             function chuanBiXoaDiem(id) {
-                document.getElementById('formXoaDiem').action = '/quanly/diemketnoi/xoa/' + id;
+                document.getElementById('formXoaDiem').action = '/quanly/diemketnoi/xoa/' + id + '?page=<%= currentPage %>';
             }
         </script>

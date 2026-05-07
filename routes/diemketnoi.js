@@ -60,6 +60,7 @@ router.post('/sua/:id', kiemTraDangNhap, async (req, res) => {
             goi_cuoc_id, ngay_dang_ky, thoi_gian_su_dung_thang,
             splitter_id, username, password, sys_id, rack, slot, port
         } = req.body;
+        const page = req.query.page || 1;
 
         //Xử lý tự động lấy loại khách hàng từ SQL Server
         let pool = await sql.connect(sqlConfig);
@@ -94,7 +95,7 @@ router.post('/sua/:id', kiemTraDangNhap, async (req, res) => {
             'thong_tin_pppoe.circuit_id.port': port
         });
 
-        res.redirect('/quanly/diemketnoi');
+        res.redirect('/quanly/diemketnoi?page=' + page);
     } catch (error) {
         console.error("Lỗi khi sửa Điểm kết nối:", error);
         hienThiLoiHeThong(req, res, "Đã xảy ra lỗi khi cập nhật Điểm kết nối.");
@@ -104,8 +105,9 @@ router.post('/sua/:id', kiemTraDangNhap, async (req, res) => {
 //Xử lý xóa điểm kết nối
 router.post('/xoa/:id', kiemTraDangNhap, async (req, res) => {
     try {
+        const page = req.query.page || 1;
         await DiemKetNoi.findByIdAndDelete(req.params.id);
-        res.redirect('/quanly/diemketnoi');
+        res.redirect('/quanly/diemketnoi?page=' + page);
     } catch (error) {
         console.error("Lỗi khi xóa Điểm kết nối:", error);
         hienThiLoiHeThong(req, res, "Đã xảy ra lỗi khi xóa Khách hàng.");
