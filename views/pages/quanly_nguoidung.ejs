@@ -151,6 +151,10 @@
                                                         title="Vui lòng vào 'Hồ sơ cá nhân' để đổi mật khẩu" disabled>
                                                         <i class="bi bi-key text-muted"></i>
                                                     </button>
+                                                    <button class="btn btn-sm btn-outline-secondary shadow-sm me-1"
+                                                        title="Bạn không thể tự xóa chính mình" disabled>
+                                                        <i class="bi bi-trash text-muted"></i>
+                                                    </button>
                                                     <% } %>
                                                         <% } else { %>
                                                             <% if (user.vai_tro_id===1) { %>
@@ -166,6 +170,13 @@
                                                                     data-bs-target="#modalDatLaiMatKhau"
                                                                     onclick="chuanBiDatLaiMatKhau('<%= tk.ten_dang_nhap %>', '<%= tk.ho_ten %>')">
                                                                     <i class="bi bi-arrow-clockwise"></i>
+                                                                </button>
+                                                                <button
+                                                                    class="btn btn-sm btn-outline-danger shadow-sm me-1"
+                                                                    title="Xóa tài khoản" data-bs-toggle="modal"
+                                                                    data-bs-target="#modalXoaTaiKhoan"
+                                                                    onclick="chuanBiXoaTaiKhoan('<%= tk.ten_dang_nhap %>', '<%= tk.ho_ten %>')">
+                                                                    <i class="bi bi-trash"></i>
                                                                 </button>
                                                                 <% } %>
                                                                     <a href="/quanly/taikhoan/chitiet/<%= tk.ten_dang_nhap %>"
@@ -313,6 +324,47 @@
     </div>
 </div>
 
+<div class="modal fade" id="modalXoaTaiKhoan" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow-lg">
+            <form action="/quanly/taikhoan/xoa_xuly" method="POST">
+                <div class="modal-header bg-danger text-white py-3">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-exclamation-triangle-fill"></i> CẢNH BÁO XÓA</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Đóng"></button>
+                </div>
+                <div class="modal-body p-4 text-center">
+                    <i class="bi bi-x-circle text-danger mb-3 d-block" style="font-size: 4rem;"></i>
+                    <h5 class="fw-bold text-dark">Bạn có chắc chắn muốn xóa tài khoản này?</h5>
+                    <div class="alert alert-danger border-0 shadow-sm mt-3 text-start">
+                        Tài khoản: <strong id="ten_hien_thi_xoa" class="fs-5"></strong>
+                    </div>
+                    <p class="text-muted mb-3">Dữ liệu nhân sự này sau khi xóa sẽ <strong class="text-danger">không thể
+                            khôi phục</strong>!</p>
+
+                    <input type="hidden" id="input_ten_dang_nhap_xoa" name="ten_dang_nhap_xoa">
+
+                    <hr class="text-muted opacity-25">
+                    <div class="text-start mb-2">
+                        <label class="form-label fw-bold text-primary"><i class="bi bi-shield-lock-fill"></i> Xác thực
+                            bảo mật</label>
+                        <p class="small text-muted mb-2">Vui lòng nhập mật khẩu của Quản trị viên để xác nhận hành động
+                            này.</p>
+                        <input type="password" class="form-control border-primary" name="mat_khau_xac_nhan"
+                            placeholder="Mật khẩu của bạn" required>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light justify-content-center py-3">
+                    <button type="button" class="btn btn-secondary fw-bold rounded-pill px-4"
+                        data-bs-dismiss="modal">Hủy bỏ</button>
+                    <button type="submit" class="btn btn-danger fw-bold rounded-pill px-4 shadow-sm"><i
+                            class="bi bi-trash-fill"></i> Xác nhận xóa</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
     function chuanBiKhoa(tenDangNhap, hoTen) {
         document.getElementById('ten_hien_thi_khoa').innerText = hoTen + ' (' + tenDangNhap + ')';
@@ -332,5 +384,10 @@
     function chuanBiDatLaiMatKhau(tenDangNhap, hoTen) {
         document.getElementById('ten_hien_thi_datlai').innerText = hoTen + ' (' + tenDangNhap + ')';
         document.getElementById('input_ten_dang_nhap_datlai').value = tenDangNhap;
+    }
+
+    function chuanBiXoaTaiKhoan(tenDangNhap, hoTen) {
+        document.getElementById('ten_hien_thi_xoa').innerText = hoTen + ' (' + tenDangNhap + ')';
+        document.getElementById('input_ten_dang_nhap_xoa').value = tenDangNhap;
     }
 </script>
