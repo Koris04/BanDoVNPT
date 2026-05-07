@@ -17,7 +17,7 @@ const kiemTraDangNhap = (req, res, next) => {
 router.get('/', kiemTraDangNhap, async (req, res) => {
     try {
         const limit = 15;
-        const page = parseInt(req.query.page) || 1; 
+        const page = parseInt(req.query.page) || 1;
         const skip = (page - 1) * limit;
 
         // Đếm tổng số điểm kết nối
@@ -47,7 +47,7 @@ router.get('/', kiemTraDangNhap, async (req, res) => {
             currentPage: page,
             totalPages: totalPages
         });
-    }  catch (error) {
+    } catch (error) {
         console.error("Lỗi Server:", error);
         hienThiLoiHeThong(req, res);
     }
@@ -58,7 +58,7 @@ router.post('/sua/:id', kiemTraDangNhap, async (req, res) => {
         const {
             ten_khach_hang, dia_chi, kinh_do, vi_do,
             goi_cuoc_id, ngay_dang_ky, thoi_gian_su_dung_thang,
-            splitter_id, username, password
+            splitter_id, username, password, sys_id, rack, slot, port
         } = req.body;
 
         //Xử lý tự động lấy loại khách hàng từ SQL Server
@@ -75,19 +75,23 @@ router.post('/sua/:id', kiemTraDangNhap, async (req, res) => {
 
         // Cập nhật lên MongoDB
         await DiemKetNoi.findByIdAndUpdate(req.params.id, {
-            ten_khach_hang, 
-            loai_khach_hang, 
+            ten_khach_hang,
+            loai_khach_hang,
             dia_chi,
             vi_tri: { type: 'Point', coordinates: [parseFloat(kinh_do), parseFloat(vi_do)] },
-            thong_tin_hop_dong: { 
-                goi_cuoc_id: parseInt(goi_cuoc_id), 
-                ngay_dang_ky: ngayDangKyDate, 
-                thoi_gian_su_dung_thang: parseInt(thoi_gian_su_dung_thang), 
-                ngay_het_han: ngayHetHanDate 
+            thong_tin_hop_dong: {
+                goi_cuoc_id: parseInt(goi_cuoc_id),
+                ngay_dang_ky: ngayDangKyDate,
+                thoi_gian_su_dung_thang: parseInt(thoi_gian_su_dung_thang),
+                ngay_het_han: ngayHetHanDate
             },
             splitter_id: splitter_id || null,
             'thong_tin_pppoe.username': username,
-            'thong_tin_pppoe.password': password
+            'thong_tin_pppoe.password': password,
+            'thong_tin_pppoe.circuit_id.sys_id': sys_id,
+            'thong_tin_pppoe.circuit_id.rack': rack,
+            'thong_tin_pppoe.circuit_id.slot': slot,
+            'thong_tin_pppoe.circuit_id.port': port
         });
 
         res.redirect('/quanly/diemketnoi');

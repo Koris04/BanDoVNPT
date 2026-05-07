@@ -16,9 +16,9 @@
             <table class="table table-hover align-middle mb-0 text-center">
                 <thead class="bg-light text-secondary">
                     <tr>
-                        <th class="py-3 text-start ps-4">Khách hàng/Địa chỉ</th>
+                        <th class="py-3 text-start ps-4">Khách hàng</th>
                         <th class="py-3">Tủ cáp</th>
-                        <th class="py-3">Vị trí</th>
+                        <th class="py-3">Địa chỉ</th>
                         <th class="py-3">Tài khoản PPPoE & Circuit ID</th>
                         <th class="py-3">Trạng thái kết nối</th>
                         <th class="py-3">Thao tác</th>
@@ -32,12 +32,11 @@
                                     <div class="fw-bold text-dark">
                                         <%= diem.ten_khach_hang %>
                                     </div>
-                                    <div class="small text-muted"><i class="bi bi-geo-alt"></i>
-                                        <%= diem.dia_chi %>
-                                    </div>
-                                    <div class="small text-primary"><span class="badge bg-light text-primary border">
+                                    <div class="small text-primary mt-1">
+                                        <span class="badge bg-light text-primary border">
                                             <%= diem.loai_khach_hang %>
-                                        </span></div>
+                                        </span>
+                                    </div>
                                 </td>
 
                                 <td>
@@ -49,6 +48,13 @@
                                         <% } else { %>
                                             <span class="text-danger small">Chưa cắm cáp</span>
                                             <% } %>
+                                </td>
+
+                                <td class="text-start" style="max-width: 220px;">
+                                    <div class="small text-muted" style="word-wrap: break-word;">
+                                        <i class="bi bi-geo-alt-fill text-danger"></i>
+                                        <%= diem.dia_chi %>
+                                    </div>
                                 </td>
 
                                 <td class="text-start">
@@ -89,14 +95,20 @@
                                         onclick="chuanBiSuaDiem('<%= diem._id %>', '<%= diem.ten_khach_hang %>', '<%= diem.dia_chi %>', '<%= diem.loai_khach_hang %>',
                                          '<%= diem.thong_tin_hop_dong ? diem.thong_tin_hop_dong.goi_cuoc_id : '' %>', 
                                          '<%= diem.thong_tin_hop_dong && diem.thong_tin_hop_dong.ngay_dang_ky ? diem.thong_tin_hop_dong.ngay_dang_ky.toISOString().split('T')[0] : '' %>', 
-                                         '<%= diem.thong_tin_hop_dong ? diem.thong_tin_hop_dong.thoi_gian_su_dung_thang : 12 %>', '<%= diem.thong_tin_pppoe ? diem.thong_tin_pppoe.username : '' %>', 
-                                         '<%= diem.thong_tin_pppoe ? diem.thong_tin_pppoe.password : '' %>', '<%= diem.splitter_id ? diem.splitter_id._id : '' %>',
-                                          <%= diem.vi_tri.coordinates[1] %>, <%= diem.vi_tri.coordinates[0] %>)"
+                                         '<%= diem.thong_tin_hop_dong ? diem.thong_tin_hop_dong.thoi_gian_su_dung_thang : 12 %>', 
+                                         '<%= diem.thong_tin_pppoe ? diem.thong_tin_pppoe.username : '' %>', 
+                                         '<%= diem.thong_tin_pppoe ? diem.thong_tin_pppoe.password : '' %>', 
+                                         '<%= diem.splitter_id ? diem.splitter_id._id : '' %>',
+                                          <%= diem.vi_tri.coordinates[1] %>, <%= diem.vi_tri.coordinates[0] %>,
+                                         '<%= diem.thong_tin_pppoe && diem.thong_tin_pppoe.circuit_id ? diem.thong_tin_pppoe.circuit_id.sys_id : '' %>',
+                                         '<%= diem.thong_tin_pppoe && diem.thong_tin_pppoe.circuit_id ? diem.thong_tin_pppoe.circuit_id.rack : '' %>',
+                                         '<%= diem.thong_tin_pppoe && diem.thong_tin_pppoe.circuit_id ? diem.thong_tin_pppoe.circuit_id.slot : '' %>',
+                                         '<%= diem.thong_tin_pppoe && diem.thong_tin_pppoe.circuit_id ? diem.thong_tin_pppoe.circuit_id.port : '' %>')"
                                         data-bs-toggle="modal" data-bs-target="#modalSuaDiem">
                                         <i class="bi bi-pencil-square"></i>
                                     </button>
 
-                                    <form action="/diemketnoi/xoa/<%= diem._id %>" method="POST" class="d-inline"
+                                    <form action="/quanly/diemketnoi/xoa/<%= diem._id %>" method="POST" class="d-inline"
                                         onsubmit="return confirm('Cảnh báo: Bạn có chắc chắn muốn xóa khách hàng này?');">
                                         <button type="submit" class="btn btn-sm btn-outline-danger shadow-sm"
                                             title="Xóa">
@@ -147,7 +159,8 @@
                         <h5 class="modal-title fw-bold"><i class="bi bi-router"></i> THÊM ĐIỂM KẾT NỐI MỚI</h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                     </div>
-                    <form action="/diemketnoi/them" method="POST">
+                    <form id="formThemDiem" action="/quanly/diemketnoi/them" method="POST"
+                        onsubmit="return kiemTraFormThemDiem(event)" novalidate>
                         <div class="modal-body p-4">
                             <div class="row">
                                 <div class="col-md-6 mb-3">
@@ -174,7 +187,8 @@
                                 </div>
 
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold text-primary">Loại hình thuê bao</label>
+                                    <label class="form-label fw-bold text-primary">Loại hình thuê bao <span
+                                            class="text-danger">*</span></label>
                                     <select id="chon_loai_hinh" class="form-select border-primary"
                                         onchange="capNhatGoiCuoc()" required>
                                         <option value="">-- Chọn loại hình --</option>
@@ -184,7 +198,8 @@
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold text-primary">Gói cước đăng ký</label>
+                                    <label class="form-label fw-bold text-primary">Gói cước đăng ký <span
+                                            class="text-danger">*</span></label>
                                     <select name="goi_cuoc_id" id="chon_goi_cuoc" class="form-select border-primary"
                                         required>
                                         <option value="">-- Chọn gói cước --</option>
@@ -196,32 +211,57 @@
                                 </div>
 
                                 <div class="col-md-4 mb-3">
-                                    <label class="form-label fw-bold">PPPoEAccount</label>
+                                    <label class="form-label fw-bold">PPPoE Account <span
+                                            class="text-danger">*</span></label>
                                     <input type="text" name="username" class="form-control text-primary fw-bold"
-                                        placeholder="Nhập tài khoản PPPoE...">
+                                        placeholder="Nhập tài khoản PPPoE..." required>
                                 </div>
                                 <div class="col-md-4 mb-3">
-                                    <label class="form-label fw-bold">PPPoEPassword</label>
+                                    <label class="form-label fw-bold">PPPoE Password <span
+                                            class="text-danger">*</span></label>
                                     <input type="text" name="password" class="form-control"
-                                        placeholder="Mật khẩu PPPoE...">
+                                        placeholder="Mật khẩu PPPoE..." required>
                                 </div>
                                 <div class="col-md-4 mb-3">
-                                    <label class="form-label fw-bold text-info">Cắm vào Tủ Splitter (Cấp 2)</label>
-                                    <select name="splitter_id" class="form-select border-info">
-                                        <option value="">-- Chọn tủ cáp --</option>
-                                        <% if (typeof danhSachSplitter !=='undefined' ) { %>
-                                            <% danhSachSplitter.forEach(sp=> { %>
-                                                <option value="<%= sp._id %>">
-                                                    <%= sp.ten_splitter %> (<%= sp.sys_id %>)
-                                                </option>
-                                                <% }) %>
-                                                    <% } %>
-                                    </select>
-                                </div>
+    <label class="form-label fw-bold text-info">Cắm vào Splitter Cấp 2</label>
+    <select name="splitter_id" id="chon_splitter" class="form-select border-info" onchange="capNhatSysID()">
+        <option value="">-- Chọn tủ cáp --</option>
+        <% if (typeof danhSachSplitter !=='undefined' ) { %>
+            <% danhSachSplitter.forEach(sp=> { %>
+                <option value="<%= sp._id %>" data-sysid="<%= sp.sys_id %>">
+                    <%= sp.ten_splitter %> (<%= sp.sys_id %>)
+                </option>
+            <% }) %>
+        <% } %>
+    </select>
+    <input type="hidden" name="sys_id" id="sys_id_hidden">
+</div>
+                                <div class="col-md-12 mb-3">
+                                    <label class="form-label fw-bold text-primary">
+                                        <i class="bi bi-diagram-3"></i> Thông số Circuit ID <span
+                                            class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group shadow-sm">
+                                        <span class="input-group-text bg-light fw-bold text-secondary">Rack</span>
+                                        <input type="text" name="rack" class="form-control text-center" maxlength="2"
+                                            placeholder="a1" required>
 
+                                        <span class="input-group-text bg-light fw-bold text-secondary">Shelf</span>
+                                        <input type="text" name="shelf"
+                                            class="form-control text-center bg-light text-muted" value="0" readonly>
+
+                                        <span class="input-group-text bg-light fw-bold text-secondary">Slot</span>
+                                        <input type="text" name="slot" class="form-control text-center" maxlength="1"
+                                            placeholder="1" required>
+
+                                        <span class="input-group-text bg-light fw-bold text-secondary">Port</span>
+                                        <input type="text" name="port" class="form-control text-center" maxlength="2"
+                                            placeholder="1" required>
+                                    </div>
+                                </div>
                                 <div class="col-md-12 mb-3">
                                     <label class="form-label fw-bold text-danger">
-                                        <i class="bi bi-geo-alt-fill"></i> Vị trí (Click vào bản đồ để ghim tọa độ)
+                                        <i class="bi bi-geo-alt-fill"></i> Vị trí
                                         <span class="text-danger">*</span>
                                     </label>
                                     <div class="input-group mb-2 shadow-sm">
@@ -235,10 +275,16 @@
                                     <div id="map-them" style="height: 300px; border-radius: 8px; z-index: 1;"
                                         class="border border-primary shadow-sm"></div>
                                     <small class="text-muted mt-1 d-block"><i class="bi bi-info-circle"></i> Gợi ý:
-                                        Người dùng
-                                        có thể nhấn giữ và kéo thả điểm ghim màu xanh để tinh chỉnh vị trí.</small>
-                                </div>
+                                        Người dùng có thể nhấn giữ và kéo thả điểm ghim màu xanh để tinh chỉnh vị
+                                        trí.</small>
 
+                                    <div id="thongBaoLoiThem"
+                                        class="alert alert-danger mt-3 mb-0 py-2 d-none shadow-sm border-danger"
+                                        role="alert">
+                                        <i class="bi bi-exclamation-triangle-fill me-2"></i><strong>Lỗi:</strong> Vui
+                                        lòng điền và chọn đầy đủ thông tin.
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="modal-footer bg-light">
@@ -313,17 +359,37 @@
                                     <input type="text" name="password" id="sua_password" class="form-control">
                                 </div>
                                 <div class="col-md-4 mb-3">
-                                    <label class="form-label fw-bold text-info">Cắm vào Tủ Splitter</label>
-                                    <select name="splitter_id" id="sua_splitter_id" class="form-select border-info">
+                                    <label class="form-label fw-bold text-info">Cắm vào Splitter</label>
+                                    <select name="splitter_id" id="sua_splitter_id" class="form-select border-info"
+                                        onchange="capNhatSysIDSua()">
                                         <option value="">-- Chọn tủ cáp --</option>
                                         <% if (typeof danhSachSplitter !=='undefined' ) { %>
                                             <% danhSachSplitter.forEach(sp=> { %>
-                                                <option value="<%= sp._id %>">
+                                                <option value="<%= sp._id %>" data-sysid="<%= sp.sys_id %>">
                                                     <%= sp.ten_splitter %> (<%= sp.sys_id %>)
                                                 </option>
                                                 <% }) %>
                                                     <% } %>
                                     </select>
+                                    <input type="hidden" name="sys_id" id="sua_sys_id_hidden">
+                                </div>
+
+                                <div class="col-md-12 mb-3">
+                                    <label class="form-label fw-bold text-primary">Circuit ID</label>
+                                    <div class="input-group shadow-sm">
+                                        <span class="input-group-text bg-light fw-bold">Rack</span>
+                                        <input type="text" name="rack" id="sua_rack" class="form-control text-center"
+                                            maxlength="2" required>
+                                        <span class="input-group-text bg-light fw-bold">Shelf</span>
+                                        <input type="text" name="shelf" class="form-control text-center bg-light"
+                                            value="0" readonly>
+                                        <span class="input-group-text bg-light fw-bold">Slot</span>
+                                        <input type="text" name="slot" id="sua_slot" class="form-control text-center"
+                                            maxlength="1" required>
+                                        <span class="input-group-text bg-light fw-bold">Port</span>
+                                        <input type="text" name="port" id="sua_port" class="form-control text-center"
+                                            maxlength="2" required>
+                                    </div>
                                 </div>
 
                                 <div class="col-md-12 mb-3">
@@ -355,132 +421,192 @@
             </div>
         </div>
         <script>
-    const mangGoiCuoc = <%- JSON.stringify(typeof danhSachGoiCuoc !== 'undefined' ? danhSachGoiCuoc : []) %>;
+            const mangGoiCuoc = <%- JSON.stringify(typeof danhSachGoiCuoc !== 'undefined' ? danhSachGoiCuoc : []) %>;
 
-    function capNhatGoiCuoc() {
-        const loaiHinh = document.getElementById('chon_loai_hinh').value;
-        const selectGoiCuoc = document.getElementById('chon_goi_cuoc');
-        selectGoiCuoc.innerHTML = '<option value="">-- Chọn gói cước --</option>';
+            function capNhatGoiCuoc() {
+                const loaiHinh = document.getElementById('chon_loai_hinh').value;
+                const selectGoiCuoc = document.getElementById('chon_goi_cuoc');
+                selectGoiCuoc.innerHTML = '<option value="">-- Chọn gói cước --</option>';
 
-        if (!loaiHinh) return;
-        const danhSachLoc = mangGoiCuoc.filter(gc => gc.loai_hinh_thue_bao && gc.loai_hinh_thue_bao.includes(loaiHinh));
+                if (!loaiHinh) return;
+                const danhSachLoc = mangGoiCuoc.filter(gc => gc.loai_hinh_thue_bao && gc.loai_hinh_thue_bao.includes(loaiHinh));
 
-        danhSachLoc.forEach(gc => {
-            const option = document.createElement('option');
-            option.value = gc.id;
-            option.textContent = gc.ten_goi_cuoc;
-            selectGoiCuoc.appendChild(option);
-        });
-    }
+                danhSachLoc.forEach(gc => {
+                    const option = document.createElement('option');
+                    option.value = gc.id;
+                    option.textContent = gc.ten_goi_cuoc;
+                    selectGoiCuoc.appendChild(option);
+                });
+            }
 
-    let mapThem;
-    let markerThem;
+            let mapThem;
+            let markerThem;
 
-    document.getElementById('modalThemDiem').addEventListener('shown.bs.modal', function () {
-        if (!mapThem) {
-            const defaultLat = 10.3759;
-            const defaultLng = 105.4333;
+            document.getElementById('modalThemDiem').addEventListener('shown.bs.modal', function () {
+                if (!mapThem) {
+                    const defaultLat = 10.3759;
+                    const defaultLng = 105.4333;
 
-            mapThem = L.map('map-them').setView([defaultLat, defaultLng], 14);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; OpenStreetMap contributors'
-            }).addTo(mapThem);
+                    mapThem = L.map('map-them').setView([defaultLat, defaultLng], 14);
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; OpenStreetMap contributors'
+                    }).addTo(mapThem);
 
-            markerThem = L.marker([defaultLat, defaultLng], { draggable: true }).addTo(mapThem);
+                    markerThem = L.marker([defaultLat, defaultLng], { draggable: true }).addTo(mapThem);
 
-            document.getElementById('vi_do_them').value = defaultLat;
-            document.getElementById('kinh_do_them').value = defaultLng;
-            
-            setTimeout(() => mapThem.invalidateSize(), 10);
+                    document.getElementById('vi_do_them').value = defaultLat;
+                    document.getElementById('kinh_do_them').value = defaultLng;
 
-            mapThem.on('click', function (e) {
-                markerThem.setLatLng([e.latlng.lat, e.latlng.lng]);
-                document.getElementById('vi_do_them').value = e.latlng.lat;
-                document.getElementById('kinh_do_them').value = e.latlng.lng;
+                    setTimeout(() => mapThem.invalidateSize(), 10);
+
+                    mapThem.on('click', function (e) {
+                        markerThem.setLatLng([e.latlng.lat, e.latlng.lng]);
+                        document.getElementById('vi_do_them').value = e.latlng.lat;
+                        document.getElementById('kinh_do_them').value = e.latlng.lng;
+                    });
+
+                    markerThem.on('dragend', function (e) {
+                        const position = markerThem.getLatLng();
+                        document.getElementById('vi_do_them').value = position.lat;
+                        document.getElementById('kinh_do_them').value = position.lng;
+                    });
+                } else {
+                    setTimeout(() => mapThem.invalidateSize(), 10);
+                }
             });
-            
-            markerThem.on('dragend', function (e) {
-                const position = markerThem.getLatLng();
-                document.getElementById('vi_do_them').value = position.lat;
-                document.getElementById('kinh_do_them').value = position.lng;
+            function kiemTraFormThemDiem(event) {
+                let hopLe = true;
+                const form = document.getElementById('formThemDiem');
+                const thongBaoLoi = document.getElementById('thongBaoLoiThem');
+
+                const cacTruongCanKiemTra = [
+                    form.ten_khach_hang,
+                    form.dia_chi,
+                    form.ngay_dang_ky,
+                    form.thoi_gian_su_dung_thang,
+                    document.getElementById('chon_loai_hinh'),
+                    document.getElementById('chon_goi_cuoc'),
+                    form.username,
+                    form.password,
+                    form.splitter_id,
+                    form.rack,
+                    form.slot,
+                    form.port
+                ];
+
+                cacTruongCanKiemTra.forEach(truong => {
+                    if (truong) {
+                        truong.classList.remove('is-invalid', 'border-danger');
+                    }
+                });
+                thongBaoLoi.classList.add('d-none');
+
+                cacTruongCanKiemTra.forEach(truong => {
+                    if (truong && (!truong.value || truong.value.trim() === '')) {
+                        truong.classList.add('is-invalid', 'border-danger');
+                        hopLe = false;
+                    }
+                });
+
+                if (!hopLe) {
+                    event.preventDefault();
+                    thongBaoLoi.classList.remove('d-none');
+                    return false;
+                }
+
+                return true;
+            }
+
+            function capNhatGoiCuocSua(selectedGoiCuocId = null) {
+                const loaiHinh = document.getElementById('sua_chon_loai_hinh').value;
+                const selectGoiCuoc = document.getElementById('sua_chon_goi_cuoc');
+                selectGoiCuoc.innerHTML = '<option value="">-- Chọn gói cước --</option>';
+
+                if (!loaiHinh) return;
+                const danhSachLoc = mangGoiCuoc.filter(gc => gc.loai_hinh_thue_bao && gc.loai_hinh_thue_bao.includes(loaiHinh));
+
+                danhSachLoc.forEach(gc => {
+                    const option = document.createElement('option');
+                    option.value = gc.id;
+                    option.textContent = gc.ten_goi_cuoc;
+                    if (selectedGoiCuocId && gc.id == selectedGoiCuocId) option.selected = true;
+                    selectGoiCuoc.appendChild(option);
+                });
+            }
+
+            let mapSuaDiem;
+            let markerSuaDiem;
+            let currentLatSuaDiem = 10.3759;
+            let currentLngSuaDiem = 105.4333;
+
+            function chuanBiSuaDiem(id, ten, diaChi, loaiHinh, goiCuocId, ngayDK, thoiGian, user, pass, splitterId, lat, lng, sysId, rack, slot, port) {
+                document.getElementById('formSuaDiem').action = '/quanly/diemketnoi/sua/' + id;
+
+                document.getElementById('sua_ten_khach_hang').value = ten;
+                document.getElementById('sua_dia_chi').value = diaChi;
+                document.getElementById('sua_chon_loai_hinh').value = loaiHinh;
+                document.getElementById('sua_ngay_dang_ky').value = ngayDK;
+                document.getElementById('sua_thoi_gian_su_dung_thang').value = thoiGian;
+                document.getElementById('sua_username').value = user;
+                document.getElementById('sua_password').value = pass;
+                document.getElementById('sua_splitter_id').value = splitterId;
+                document.getElementById('sua_sys_id_hidden').value = sysId;
+                document.getElementById('sua_rack').value = rack;
+                document.getElementById('sua_slot').value = slot;
+                document.getElementById('sua_port').value = port;
+
+                capNhatGoiCuocSua(goiCuocId);
+
+                document.getElementById('sua_vi_do').value = lat;
+                document.getElementById('sua_kinh_do').value = lng;
+                currentLatSuaDiem = lat;
+                currentLngSuaDiem = lng;
+
+                if (mapSuaDiem && markerSuaDiem) {
+                    let newLatLng = new L.LatLng(lat, lng);
+                    markerSuaDiem.setLatLng(newLatLng);
+                    mapSuaDiem.setView(newLatLng, 17);
+                }
+            }
+
+            document.getElementById('modalSuaDiem').addEventListener('shown.bs.modal', function () {
+                if (!mapSuaDiem) {
+                    mapSuaDiem = L.map('map-sua-diem').setView([currentLatSuaDiem, currentLngSuaDiem], 17);
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; OpenStreetMap'
+                    }).addTo(mapSuaDiem);
+
+                    markerSuaDiem = L.marker([currentLatSuaDiem, currentLngSuaDiem], { draggable: true }).addTo(mapSuaDiem);
+
+                    setTimeout(() => mapSuaDiem.invalidateSize(), 10);
+
+                    mapSuaDiem.on('click', function (e) {
+                        markerSuaDiem.setLatLng([e.latlng.lat, e.latlng.lng]);
+                        document.getElementById('sua_vi_do').value = e.latlng.lat;
+                        document.getElementById('sua_kinh_do').value = e.latlng.lng;
+                    });
+
+                    markerSuaDiem.on('dragend', function (e) {
+                        const position = markerSuaDiem.getLatLng();
+                        document.getElementById('sua_vi_do').value = position.lat;
+                        document.getElementById('sua_kinh_do').value = position.lng;
+                    });
+                } else {
+                    setTimeout(() => mapSuaDiem.invalidateSize(), 10);
+                }
             });
-        } else {
-            setTimeout(() => mapThem.invalidateSize(), 10);
-        }
-    });
 
-    function capNhatGoiCuocSua(selectedGoiCuocId = null) {
-        const loaiHinh = document.getElementById('sua_chon_loai_hinh').value;
-        const selectGoiCuoc = document.getElementById('sua_chon_goi_cuoc');
-        selectGoiCuoc.innerHTML = '<option value="">-- Chọn gói cước --</option>';
+            function capNhatSysID() {
+                const select = document.getElementById('chon_splitter');
+                const selectedOption = select.options[select.selectedIndex];
+                const sysId = selectedOption.getAttribute('data-sysid');
+                document.getElementById('sys_id_hidden').value = sysId || '';
+            }
 
-        if (!loaiHinh) return;
-        const danhSachLoc = mangGoiCuoc.filter(gc => gc.loai_hinh_thue_bao && gc.loai_hinh_thue_bao.includes(loaiHinh));
-
-        danhSachLoc.forEach(gc => {
-            const option = document.createElement('option');
-            option.value = gc.id;
-            option.textContent = gc.ten_goi_cuoc;
-            if (selectedGoiCuocId && gc.id == selectedGoiCuocId) option.selected = true;
-            selectGoiCuoc.appendChild(option);
-        });
-    }
-
-    let mapSuaDiem;
-    let markerSuaDiem;
-    let currentLatSuaDiem = 10.3759;
-    let currentLngSuaDiem = 105.4333;
-
-    function chuanBiSuaDiem(id, ten, diaChi, loaiHinh, goiCuocId, ngayDK, thoiGian, user, pass, splitterId, lat, lng) {
-        document.getElementById('formSuaDiem').action = '/diemketnoi/sua/' + id;
-        
-        document.getElementById('sua_ten_khach_hang').value = ten;
-        document.getElementById('sua_dia_chi').value = diaChi;
-        document.getElementById('sua_chon_loai_hinh').value = loaiHinh;
-        document.getElementById('sua_ngay_dang_ky').value = ngayDK;
-        document.getElementById('sua_thoi_gian_su_dung_thang').value = thoiGian;
-        document.getElementById('sua_username').value = user;
-        document.getElementById('sua_password').value = pass;
-        document.getElementById('sua_splitter_id').value = splitterId;
-        
-        capNhatGoiCuocSua(goiCuocId);
-
-        document.getElementById('sua_vi_do').value = lat;
-        document.getElementById('sua_kinh_do').value = lng;
-        currentLatSuaDiem = lat;
-        currentLngSuaDiem = lng;
-
-        if (mapSuaDiem && markerSuaDiem) {
-            let newLatLng = new L.LatLng(lat, lng);
-            markerSuaDiem.setLatLng(newLatLng);
-            mapSuaDiem.setView(newLatLng, 17);
-        }
-    }
-
-    document.getElementById('modalSuaDiem').addEventListener('shown.bs.modal', function () {
-        if (!mapSuaDiem) {
-            mapSuaDiem = L.map('map-sua-diem').setView([currentLatSuaDiem, currentLngSuaDiem], 17);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; OpenStreetMap'
-            }).addTo(mapSuaDiem);
-
-            markerSuaDiem = L.marker([currentLatSuaDiem, currentLngSuaDiem], { draggable: true }).addTo(mapSuaDiem);
-
-            setTimeout(() => mapSuaDiem.invalidateSize(), 10);
-
-            mapSuaDiem.on('click', function (e) {
-                markerSuaDiem.setLatLng([e.latlng.lat, e.latlng.lng]);
-                document.getElementById('sua_vi_do').value = e.latlng.lat;
-                document.getElementById('sua_kinh_do').value = e.latlng.lng;
-            });
-
-            markerSuaDiem.on('dragend', function (e) {
-                const position = markerSuaDiem.getLatLng();
-                document.getElementById('sua_vi_do').value = position.lat;
-                document.getElementById('sua_kinh_do').value = position.lng;
-            });
-        } else {
-            setTimeout(() => mapSuaDiem.invalidateSize(), 10);
-        }
-    });
-</script>
+            function capNhatSysIDSua() {
+                const select = document.getElementById('sua_splitter_id');
+                const selectedOption = select.options[select.selectedIndex];
+                const sysId = selectedOption.getAttribute('data-sysid');
+                document.getElementById('sua_sys_id_hidden').value = sysId || '';
+            }
+        </script>

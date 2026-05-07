@@ -44,7 +44,7 @@ router.post('/them', kiemTraDangNhap, async (req, res) => {
             vi_tri: { type: 'Point', coordinates: [parseFloat(kinh_do), parseFloat(vi_do)] },
             thong_tin_hop_dong: { goi_cuoc_id: parseInt(goi_cuoc_id), ngay_dang_ky: ngayDangKyDate, thoi_gian_su_dung_thang: parseInt(thoi_gian_su_dung_thang), ngay_het_han: ngayHetHanDate },
 
-            splitter_id: splitter_id,
+            splitter_id: splitter_id || null,
             thong_tin_pppoe: {
                 username: username,
                 password: password,
