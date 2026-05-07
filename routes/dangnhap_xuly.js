@@ -4,10 +4,16 @@ const sql = require('mssql');
 
 //Cấu hình SQL Server
 const { sqlConfig } = require('../database');
+
 //Route: Xử lý đăng nhập
 router.post('/dangnhap', async (req, res) => {
     const { username, password } = req.body;
-    if (!username || !password) return res.render('pages/dangnhap', { error: 'Vui lòng nhập đầy đủ!', oldUsername: username || '' });
+    
+    if (!username || !password) return res.render('pages/dangnhap', { 
+        error: 'Vui lòng nhập đầy đủ!', 
+        oldUsername: username || '',
+        layout: false 
+    });
 
     try {
         let pool = await sql.connect(sqlConfig);
@@ -19,10 +25,18 @@ router.post('/dangnhap', async (req, res) => {
             req.session.user = result.recordset[0];
             res.redirect('/');
         } else {
-            res.render('pages/dangnhap', { error: 'Tên đăng nhập hoặc mật khẩu không đúng!', oldUsername: username });
+            res.render('pages/dangnhap', { 
+                error: 'Tên đăng nhập hoặc mật khẩu không đúng!', 
+                oldUsername: username,
+                layout: false 
+            });
         }
     } catch (err) {
-        res.render('pages/dangnhap', { error: 'Lỗi hệ thống cơ sở dữ liệu.', oldUsername: username });
+        res.render('pages/dangnhap', { 
+            error: 'Lỗi hệ thống cơ sở dữ liệu.', 
+            oldUsername: username,
+            layout: false 
+        });
     }
 });
 

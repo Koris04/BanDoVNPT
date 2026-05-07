@@ -50,3 +50,7 @@ CREATE TABLE ChiTietBaoCao (
     noi_dung_cap_nhat NVARCHAR(MAX) NOT NULL, 
     hinh_anh_minh_hoa VARCHAR(255) NULL 
 );
+Select * From TaiKhoan
+
+INSERT INTO TaiKhoan (ten_dang_nhap, mat_khau, ho_ten, vai_tro_id, trang_thai, so_dien_thoai, email_lien_he, dia_chi)
+VALUES ('taikhoan_test', '123456', N'Ban Giám Khảo', 1, 1, 0123341253, 'none', 'none');

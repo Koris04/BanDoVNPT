@@ -108,13 +108,11 @@
                                         <i class="bi bi-pencil-square"></i>
                                     </button>
 
-                                    <form action="/quanly/diemketnoi/xoa/<%= diem._id %>" method="POST" class="d-inline"
-                                        onsubmit="return confirm('Cảnh báo: Bạn có chắc chắn muốn xóa khách hàng này?');">
-                                        <button type="submit" class="btn btn-sm btn-outline-danger shadow-sm"
-                                            title="Xóa">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </form>
+                                    <button class="btn btn-sm btn-outline-danger shadow-sm" title="Xóa"
+                                        onclick="chuanBiXoaDiem('<%= diem._id %>')" data-bs-toggle="modal"
+                                        data-bs-target="#modalXoaDiem">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
                                 </td>
                             </tr>
                             <% }); %>
@@ -223,19 +221,20 @@
                                         placeholder="Mật khẩu PPPoE..." required>
                                 </div>
                                 <div class="col-md-4 mb-3">
-    <label class="form-label fw-bold text-info">Cắm vào Splitter Cấp 2</label>
-    <select name="splitter_id" id="chon_splitter" class="form-select border-info" onchange="capNhatSysID()">
-        <option value="">-- Chọn tủ cáp --</option>
-        <% if (typeof danhSachSplitter !=='undefined' ) { %>
-            <% danhSachSplitter.forEach(sp=> { %>
-                <option value="<%= sp._id %>" data-sysid="<%= sp.sys_id %>">
-                    <%= sp.ten_splitter %> (<%= sp.sys_id %>)
-                </option>
-            <% }) %>
-        <% } %>
-    </select>
-    <input type="hidden" name="sys_id" id="sys_id_hidden">
-</div>
+                                    <label class="form-label fw-bold text-info">Cắm vào Splitter Cấp 2</label>
+                                    <select name="splitter_id" id="chon_splitter" class="form-select border-info"
+                                        onchange="capNhatSysID()">
+                                        <option value="">-- Chọn tủ cáp --</option>
+                                        <% if (typeof danhSachSplitter !=='undefined' ) { %>
+                                            <% danhSachSplitter.forEach(sp=> { %>
+                                                <option value="<%= sp._id %>" data-sysid="<%= sp.sys_id %>">
+                                                    <%= sp.ten_splitter %> (<%= sp.sys_id %>)
+                                                </option>
+                                                <% }) %>
+                                                    <% } %>
+                                    </select>
+                                    <input type="hidden" name="sys_id" id="sys_id_hidden">
+                                </div>
                                 <div class="col-md-12 mb-3">
                                     <label class="form-label fw-bold text-primary">
                                         <i class="bi bi-diagram-3"></i> Thông số Circuit ID <span
@@ -415,6 +414,31 @@
                                 data-bs-dismiss="modal">Hủy bỏ</button>
                             <button type="submit" class="btn btn-warning fw-bold rounded-pill px-4 shadow-sm"><i
                                     class="bi bi-floppy"></i> Lưu cập nhật</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="modalXoaDiem" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow-lg rounded-4">
+                    <div class="modal-header bg-danger text-white py-3">
+                        <h5 class="modal-title fw-bold"><i class="bi bi-exclamation-triangle-fill"></i> CẢNH BÁO XÓA
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form id="formXoaDiem" method="POST">
+                        <div class="modal-body p-4 text-center">
+                            <i class="bi bi-x-circle text-danger mb-3 d-block" style="font-size: 4rem;"></i>
+                            <h5 class="fw-bold text-dark">Bạn có chắc chắn muốn xóa Điểm kết nối này?</h5>
+                            <p class="text-muted mb-0">Dữ liệu khách hàng sau khi xóa sẽ <strong
+                                    class="text-danger">không thể khôi phục</strong>!</p>
+                        </div>
+                        <div class="modal-footer bg-light justify-content-center py-3">
+                            <button type="button" class="btn btn-secondary fw-bold rounded-pill px-4"
+                                data-bs-dismiss="modal">Hủy bỏ</button>
+                            <button type="submit" class="btn btn-danger fw-bold rounded-pill px-4 shadow-sm">Xác nhận
+                                xóa</button>
                         </div>
                     </form>
                 </div>
@@ -608,5 +632,8 @@
                 const selectedOption = select.options[select.selectedIndex];
                 const sysId = selectedOption.getAttribute('data-sysid');
                 document.getElementById('sua_sys_id_hidden').value = sysId || '';
+            }
+            function chuanBiXoaDiem(id) {
+                document.getElementById('formXoaDiem').action = '/quanly/diemketnoi/xoa/' + id;
             }
         </script>
