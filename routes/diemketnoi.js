@@ -32,7 +32,7 @@ router.get('/', kiemTraDangNhap, async (req, res) => {
             .limit(limit);
 
         // Lấy danh sách tủ 1:16 để đổ vào Form thêm mới
-        const danhSachSplitter16 = await Splitter.find({ loai_splitter: '1:16' });
+        const danhSachSplitter16 = await Splitter.find({ loai_splitter: '1:16', trang_thai: 'Hoạt động' });
 
         // Lấy danh sách gói cước từ SQL Server
         let pool = await sql.connect(sqlConfig);

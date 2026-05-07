@@ -41,14 +41,15 @@ router.get('/', kiemTraDangNhap, async (req, res) => {
 //Xử lý sửa thông tin Splitter
 router.post('/sua/:id', kiemTraDangNhap, async (req, res) => {
     try {
-        const { ten_splitter, sys_id, vi_do, kinh_do, loai_splitter, splitter_cha_id } = req.body;
+        const { ten_splitter, sys_id, vi_do, kinh_do, loai_splitter, splitter_cha_id,trang_thai } = req.body;
         
         await Splitter.findByIdAndUpdate(req.params.id, {
             ten_splitter: ten_splitter,
             sys_id: sys_id,
             loai_splitter: loai_splitter,
             vi_tri: { type: 'Point', coordinates: [parseFloat(kinh_do), parseFloat(vi_do)] },
-            splitter_cha_id: (loai_splitter === '1:16' && splitter_cha_id) ? splitter_cha_id : null
+            splitter_cha_id: (loai_splitter === '1:16' && splitter_cha_id) ? splitter_cha_id : null,
+            trang_thai: trang_thai
         });
         
         res.redirect('/quanly/splitter');

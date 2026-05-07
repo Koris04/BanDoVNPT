@@ -57,24 +57,28 @@
                                             <% } %>
                                 </td>
                                 <td class="text-center">
-                                    <span class="badge bg-success rounded-pill">
-                                        <%= sp.trang_thai %>
-                                    </span>
+                                    <% if(sp.trang_thai==='Hoạt động' ) { %>
+                                        <span class="badge bg-success rounded-pill">
+                                            <%= sp.trang_thai %>
+                                        </span>
+                                        <% } else { %>
+                                            <span class="badge bg-danger rounded-pill">
+                                                <%= sp.trang_thai || 'Ngừng sử dụng' %>
+                                            </span>
+                                            <% } %>
                                 </td>
                                 <td class="text-center">
                                     <button class="btn btn-sm btn-outline-warning shadow-sm me-1" title="Sửa thông tin"
-                                        onclick="chuanBiSuaSplitter('<%= sp._id %>', '<%= sp.ten_splitter %>', '<%= sp.sys_id %>', <%= sp.vi_tri.coordinates[1] %>, <%= sp.vi_tri.coordinates[0] %>, '<%= sp.loai_splitter %>', '<%= sp.splitter_cha_id ? sp.splitter_cha_id._id : '' %>')"
+                                        onclick="chuanBiSuaSplitter('<%= sp._id %>', '<%= sp.ten_splitter %>', '<%= sp.sys_id %>', <%= sp.vi_tri.coordinates[1] %>, <%= sp.vi_tri.coordinates[0] %>, '<%= sp.loai_splitter %>', '<%= sp.splitter_cha_id ? sp.splitter_cha_id._id : '' %>', '<%= sp.trang_thai %>')"
                                         data-bs-toggle="modal" data-bs-target="#modalSuaSplitter">
                                         <i class="bi bi-pencil-square"></i>
                                     </button>
 
-                                    <form action="/quanly/splitter/xoa/<%= sp._id %>" method="POST" class="d-inline"
-                                        onsubmit="return confirm('Cảnh báo: Bạn có chắc chắn muốn xóa Tủ PON này? Dữ liệu sẽ không thể khôi phục!');">
-                                        <button type="submit" class="btn btn-sm btn-outline-danger shadow-sm"
-                                            title="Xóa tủ">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </form>
+                                    <button class="btn btn-sm btn-outline-danger shadow-sm" title="Xóa tủ"
+                                        onclick="chuanBiXoaSplitter('<%= sp._id %>')" data-bs-toggle="modal"
+                                        data-bs-target="#modalXoaSplitter">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
                                 </td>
                             </tr>
                             <% }); %>
@@ -129,8 +133,8 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label fw-bold">SysID</label>
-                                <input type="text" name="sys_id" class="form-control text-danger fw-bold"
-                                    value="AGG-LX-01" required>
+                                <input type="text" name="sys_id" id="sys_id_them"
+                                    class="form-control text-danger fw-bold" value="AGG-LX-01" required>
                             </div>
                             <div class="col-md-12 mb-3">
                                 <label class="form-label fw-bold text-danger">
@@ -168,11 +172,12 @@
                             <div class="mb-3 d-none bg-light p-3 border rounded" id="khung_splitter_cha">
                                 <label class="form-label fw-bold text-danger"><i class="bi bi-link-45deg"></i> Nối
                                     vào tủ Cấp 1 nào?</label>
-                                <select name="splitter_cha_id" class="form-select">
+                                <select name="splitter_cha_id" id="chon_splitter_cha" class="form-select"
+                                    onchange="capNhatSysID_Splitter()">
                                     <option value="">-- Chọn tủ nguồn --</option>
                                     <% if (typeof danhSachSplitterCap1 !=='undefined' ) { %>
                                         <% danhSachSplitterCap1.forEach(function(sp) { %>
-                                            <option value="<%= sp._id %>">
+                                            <option value="<%= sp._id %>" data-sysid="<%= sp.sys_id %>">
                                                 <%= sp.ten_splitter %> (<%= sp.sys_id %>)
                                             </option>
                                             <% }); %>
@@ -225,6 +230,14 @@
                                 <div id="map-splitter-sua" style="height: 300px; border-radius: 8px; z-index: 1;"
                                     class="border border-primary shadow-sm"></div>
                             </div>
+                            <div class="mb-3 mt-3">
+                                <label class="form-label fw-bold text-danger">Trạng thái tủ</label>
+                                <select name="trang_thai" id="sua_trang_thai" class="form-select border-danger"
+                                    required>
+                                    <option value="Hoạt động">Hoạt động</option>
+                                    <option value="Ngừng sử dụng">Ngừng sử dụng</option>
+                                </select>
+                            </div>
                             <hr>
                             <div class="mb-3">
                                 <label class="form-label fw-bold text-primary">Loại tủ</label>
@@ -237,11 +250,12 @@
                             <div class="mb-3 bg-light p-3 border rounded" id="sua_khung_splitter_cha">
                                 <label class="form-label fw-bold text-danger"><i class="bi bi-link-45deg"></i> Nối vào
                                     tủ Cấp 1 nào?</label>
-                                <select name="splitter_cha_id" id="sua_splitter_cha_id" class="form-select">
+                                <select name="splitter_cha_id" id="sua_splitter_cha_id" class="form-select"
+                                    onchange="capNhatSysIDSua_Splitter()">
                                     <option value="">-- Chọn tủ nguồn --</option>
                                     <% if (typeof danhSachSplitterCap1 !=='undefined' ) { %>
                                         <% danhSachSplitterCap1.forEach(function(sp) { %>
-                                            <option value="<%= sp._id %>">
+                                            <option value="<%= sp._id %>" data-sysid="<%= sp.sys_id %>">
                                                 <%= sp.ten_splitter %> (<%= sp.sys_id %>)
                                             </option>
                                             <% }); %>
@@ -253,6 +267,31 @@
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
                             <button type="submit" class="btn btn-warning fw-bold shadow-sm"><i class="bi bi-floppy"></i>
                                 Cập nhật</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="modalXoaSplitter" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow-lg rounded-4">
+                    <div class="modal-header bg-danger text-white py-3">
+                        <h5 class="modal-title fw-bold"><i class="bi bi-exclamation-triangle-fill"></i> CẢNH BÁO XÓA
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form id="formXoaSplitter" method="POST">
+                        <div class="modal-body p-4 text-center">
+                            <i class="bi bi-x-circle text-danger mb-3 d-block" style="font-size: 4rem;"></i>
+                            <h5 class="fw-bold text-dark">Bạn có chắc chắn muốn xóa Tủ PON này?</h5>
+                            <p class="text-muted mb-0">Dữ liệu sau khi xóa sẽ <strong class="text-danger">không thể khôi
+                                    phục</strong>!</p>
+                        </div>
+                        <div class="modal-footer bg-light justify-content-center py-3">
+                            <button type="button" class="btn btn-secondary fw-bold rounded-pill px-4"
+                                data-bs-dismiss="modal">Hủy bỏ</button>
+                            <button type="submit" class="btn btn-danger fw-bold rounded-pill px-4 shadow-sm">Xác nhận
+                                xóa</button>
                         </div>
                     </form>
                 </div>
@@ -275,7 +314,7 @@
             let currentLatSua = 10.3759;
             let currentLngSua = 105.4333;
 
-            function chuanBiSuaSplitter(id, ten, sys_id, lat, lng, loai, cha_id) {
+            function chuanBiSuaSplitter(id, ten, sys_id, lat, lng, loai, cha_id, trangThai) {
                 document.getElementById('formSuaSplitter').action = '/quanly/splitter/sua/' + id;
 
                 document.getElementById('sua_ten_splitter').value = ten;
@@ -283,6 +322,7 @@
                 document.getElementById('sua_loai_splitter').value = loai;
                 document.getElementById('sua_vi_do').value = lat;
                 document.getElementById('sua_kinh_do').value = lng;
+                document.getElementById('sua_trang_thai').value = trangThai || 'Hoạt động';
 
                 document.getElementById('sua_splitter_cha_id').value = cha_id || '';
 
@@ -294,84 +334,112 @@
                 if (mapSuaSplitter && markerSuaSplitter) {
                     let newLatLng = new L.LatLng(lat, lng);
                     markerSuaSplitter.setLatLng(newLatLng);
-                    mapSuaSplitter.setView(newLatLng, 17);
+                    setTimeout(() => {
+                        mapSuaSplitter.invalidateSize();
+                        mapSuaSplitter.setView(newLatLng, 17);
+                    }, 250);
+                }
+
+                document.getElementById('modalSuaSplitter').addEventListener('shown.bs.modal', function () {
+                    if (!mapSuaSplitter) {
+                        mapSuaSplitter = L.map('map-splitter-sua').setView([currentLatSua, currentLngSua], 17);
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            attribution: '&copy; OpenStreetMap'
+                        }).addTo(mapSuaSplitter);
+
+                        markerSuaSplitter = L.marker([currentLatSua, currentLngSua], { draggable: true }).addTo(mapSuaSplitter);
+
+                        mapSuaSplitter.on('click', function (e) {
+                            markerSuaSplitter.setLatLng([e.latlng.lat, e.latlng.lng]);
+                            document.getElementById('sua_vi_do').value = e.latlng.lat;
+                            document.getElementById('sua_kinh_do').value = e.latlng.lng;
+                        });
+
+                        markerSuaSplitter.on('dragend', function (e) {
+                            const position = markerSuaSplitter.getLatLng();
+                            document.getElementById('sua_vi_do').value = position.lat;
+                            document.getElementById('sua_kinh_do').value = position.lng;
+                        });
+                    } else {
+                        mapSuaSplitter.invalidateSize();
+                    }
+                });
+                function kiemTraLoaiSplitter() {
+                    var loai = document.getElementById('loai_splitter').value;
+                    var khungCha = document.getElementById('khung_splitter_cha');
+                    if (loai === '1:16') {
+                        khungCha.classList.remove('d-none');
+                    } else {
+                        khungCha.classList.add('d-none');
+                    }
+                }
+
+                let mapSplitter;
+                let markerSplitter;
+
+                document.getElementById('modalThemSplitter').addEventListener('shown.bs.modal', function () {
+
+                    if (!mapSplitter) {
+                        const defaultLat = 10.3759;
+                        const defaultLng = 105.4333;
+
+                        mapSplitter = L.map('map-splitter').setView([defaultLat, defaultLng], 14);
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            attribution: '&copy; OpenStreetMap contributors'
+                        }).addTo(mapSplitter);
+
+                        markerSplitter = L.marker([defaultLat, defaultLng], { draggable: true }).addTo(mapSplitter);
+
+                        document.getElementById('vi_do_splitter').value = defaultLat;
+                        document.getElementById('kinh_do_splitter').value = defaultLng;
+
+                        mapSplitter.on('click', function (e) {
+                            const lat = e.latlng.lat;
+                            const lng = e.latlng.lng;
+
+                            markerSplitter.setLatLng([lat, lng]);
+
+                            document.getElementById('vi_do_splitter').value = lat;
+                            document.getElementById('kinh_do_splitter').value = lng;
+                        });
+
+                        markerSplitter.on('dragend', function (e) {
+                            const position = markerSplitter.getLatLng();
+                            document.getElementById('vi_do_splitter').value = position.lat;
+                            document.getElementById('kinh_do_splitter').value = position.lng;
+                        });
+
+                    } else {
+                        mapSplitter.invalidateSize();
+                    }
+                });
+                function capNhatSysID_Splitter() {
+                    const select = document.getElementById('chon_splitter_cha');
+                    const selectedOption = select.options[select.selectedIndex];
+                    const sysId = selectedOption.getAttribute('data-sysid');
+                    const inputSysId = document.getElementById('sys_id_them');
+
+                    if (sysId) {
+                        inputSysId.value = sysId;
+                    } else {
+                        inputSysId.value = 'AGG-LX-01';
+                    }
+                }
+
+                function capNhatSysIDSua_Splitter() {
+                    const select = document.getElementById('sua_splitter_cha_id');
+                    const selectedOption = select.options[select.selectedIndex];
+                    const sysId = selectedOption.getAttribute('data-sysid');
+                    const inputSysId = document.getElementById('sua_sys_id');
+
+                    if (sysId) {
+                        inputSysId.value = sysId;
+                    }
+                }
+                function chuanBiXoaSplitter(id) {
+                    document.getElementById('formXoaSplitter').action = '/quanly/splitter/xoa/' + id;
                 }
             }
-
-            document.getElementById('modalSuaSplitter').addEventListener('shown.bs.modal', function () {
-                if (!mapSuaSplitter) {
-                    mapSuaSplitter = L.map('map-splitter-sua').setView([currentLatSua, currentLngSua], 17);
-                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        attribution: '&copy; OpenStreetMap'
-                    }).addTo(mapSuaSplitter);
-
-                    markerSuaSplitter = L.marker([currentLatSua, currentLngSua], { draggable: true }).addTo(mapSuaSplitter);
-
-                    mapSuaSplitter.on('click', function (e) {
-                        markerSuaSplitter.setLatLng([e.latlng.lat, e.latlng.lng]);
-                        document.getElementById('sua_vi_do').value = e.latlng.lat;
-                        document.getElementById('sua_kinh_do').value = e.latlng.lng;
-                    });
-
-                    markerSuaSplitter.on('dragend', function (e) {
-                        const position = markerSuaSplitter.getLatLng();
-                        document.getElementById('sua_vi_do').value = position.lat;
-                        document.getElementById('sua_kinh_do').value = position.lng;
-                    });
-                } else {
-                    mapSuaSplitter.invalidateSize();
-                }
-            });
+            
         </script>
-
-        <script>
-            function kiemTraLoaiSplitter() {
-                var loai = document.getElementById('loai_splitter').value;
-                var khungCha = document.getElementById('khung_splitter_cha');
-                if (loai === '1:16') {
-                    khungCha.classList.remove('d-none');
-                } else {
-                    khungCha.classList.add('d-none');
-                }
-            }
-
-            let mapSplitter;
-            let markerSplitter;
-
-            document.getElementById('modalThemSplitter').addEventListener('shown.bs.modal', function () {
-
-                if (!mapSplitter) {
-                    const defaultLat = 10.3759;
-                    const defaultLng = 105.4333;
-
-                    mapSplitter = L.map('map-splitter').setView([defaultLat, defaultLng], 14);
-                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        attribution: '&copy; OpenStreetMap contributors'
-                    }).addTo(mapSplitter);
-
-                    markerSplitter = L.marker([defaultLat, defaultLng], { draggable: true }).addTo(mapSplitter);
-
-                    document.getElementById('vi_do_splitter').value = defaultLat;
-                    document.getElementById('kinh_do_splitter').value = defaultLng;
-
-                    mapSplitter.on('click', function (e) {
-                        const lat = e.latlng.lat;
-                        const lng = e.latlng.lng;
-
-                        markerSplitter.setLatLng([lat, lng]);
-
-                        document.getElementById('vi_do_splitter').value = lat;
-                        document.getElementById('kinh_do_splitter').value = lng;
-                    });
-
-                    markerSplitter.on('dragend', function (e) {
-                        const position = markerSplitter.getLatLng();
-                        document.getElementById('vi_do_splitter').value = position.lat;
-                        document.getElementById('kinh_do_splitter').value = position.lng;
-                    });
-
-                } else {
-                    mapSplitter.invalidateSize();
-                }
-            });
-        </script>
+        

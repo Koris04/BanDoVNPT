@@ -22,7 +22,8 @@ router.post('/them', kiemTraDangNhap, async (req, res) => {
                 type: 'Point',
                 coordinates: [parseFloat(kinh_do), parseFloat(vi_do)]
             },
-            splitter_cha_id: (loai_splitter === '1:16' && splitter_cha_id) ? splitter_cha_id : null
+            splitter_cha_id: (loai_splitter === '1:16' && splitter_cha_id) ? splitter_cha_id : null,
+            trang_thai: 'Hoạt động'
         });
 
         await tuCapMoi.save();
