@@ -42,7 +42,8 @@ router.get('/', kiemTraDangNhap, async (req, res) => {
 router.post('/sua/:id', kiemTraDangNhap, async (req, res) => {
     try {
         const { ten_splitter, sys_id, vi_do, kinh_do, loai_splitter, splitter_cha_id,trang_thai } = req.body;
-        
+        const page = req.query.page || 1;
+
         await Splitter.findByIdAndUpdate(req.params.id, {
             ten_splitter: ten_splitter,
             sys_id: sys_id,
@@ -52,7 +53,7 @@ router.post('/sua/:id', kiemTraDangNhap, async (req, res) => {
             trang_thai: trang_thai
         });
         
-        res.redirect('/quanly/splitter');
+        res.redirect('/quanly/splitter?page=' + page);
     } catch (error) {
         console.error("Lỗi khi sửa Splitter:", error);
         hienThiLoiHeThong(req, res, "Đã xảy ra lỗi khi cập nhật thông tin Tủ PON.");
@@ -62,14 +63,15 @@ router.post('/sua/:id', kiemTraDangNhap, async (req, res) => {
 //Xử lý xóa Splitter
 router.post('/xoa/:id', kiemTraDangNhap, async (req, res) => {
     try {
-        //Kiểm tra nếu Splitter định xóa là tủ cấp 1, thì kiểm tra xem có tủ cấp 2 nào đang nối vào nó không?
         const kiemTraCon = await Splitter.findOne({ splitter_cha_id: req.params.id });
+        const page = req.query.page || 1;
+
         if (kiemTraCon) {
             return hienThiLoiHeThong(req, res, "LỖI! Không thể xóa Tủ Cấp 1 này vì hiện đang có Tủ Cấp 2 nối vào. Vui lòng đổi nguồn cáp của tủ cấp 2 trước!");
         }
         
         await Splitter.findByIdAndDelete(req.params.id);
-        res.redirect('/quanly/splitter');
+        res.redirect('/quanly/splitter?page=' + page);
     } catch (error) {
         console.error("Lỗi khi xóa Splitter:", error);
         hienThiLoiHeThong(req, res, "Đã xảy ra lỗi khi xóa Tủ PON.");

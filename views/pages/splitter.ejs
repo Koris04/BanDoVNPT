@@ -315,15 +315,14 @@
             let currentLngSua = 105.4333;
 
             function chuanBiSuaSplitter(id, ten, sys_id, lat, lng, loai, cha_id, trangThai) {
-                document.getElementById('formSuaSplitter').action = '/quanly/splitter/sua/' + id;
-
+                document.getElementById('formSuaSplitter').action = '/quanly/splitter/sua/' + id + '?page=<%= currentPage %>';
                 document.getElementById('sua_ten_splitter').value = ten;
                 document.getElementById('sua_sys_id').value = sys_id;
                 document.getElementById('sua_loai_splitter').value = loai;
                 document.getElementById('sua_vi_do').value = lat;
                 document.getElementById('sua_kinh_do').value = lng;
                 document.getElementById('sua_trang_thai').value = trangThai || 'Hoạt động';
-
+                
                 document.getElementById('sua_splitter_cha_id').value = cha_id || '';
 
                 kiemTraLoaiSplitterSua();
@@ -339,107 +338,104 @@
                         mapSuaSplitter.setView(newLatLng, 17);
                     }, 250);
                 }
+            }
+            document.getElementById('modalSuaSplitter').addEventListener('shown.bs.modal', function () {
+                if (!mapSuaSplitter) {
+                    mapSuaSplitter = L.map('map-splitter-sua').setView([currentLatSua, currentLngSua], 17);
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; OpenStreetMap'
+                    }).addTo(mapSuaSplitter);
 
-                document.getElementById('modalSuaSplitter').addEventListener('shown.bs.modal', function () {
-                    if (!mapSuaSplitter) {
-                        mapSuaSplitter = L.map('map-splitter-sua').setView([currentLatSua, currentLngSua], 17);
-                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                            attribution: '&copy; OpenStreetMap'
-                        }).addTo(mapSuaSplitter);
+                    markerSuaSplitter = L.marker([currentLatSua, currentLngSua], { draggable: true }).addTo(mapSuaSplitter);
 
-                        markerSuaSplitter = L.marker([currentLatSua, currentLngSua], { draggable: true }).addTo(mapSuaSplitter);
+                    mapSuaSplitter.on('click', function (e) {
+                        markerSuaSplitter.setLatLng([e.latlng.lat, e.latlng.lng]);
+                        document.getElementById('sua_vi_do').value = e.latlng.lat;
+                        document.getElementById('sua_kinh_do').value = e.latlng.lng;
+                    });
 
-                        mapSuaSplitter.on('click', function (e) {
-                            markerSuaSplitter.setLatLng([e.latlng.lat, e.latlng.lng]);
-                            document.getElementById('sua_vi_do').value = e.latlng.lat;
-                            document.getElementById('sua_kinh_do').value = e.latlng.lng;
-                        });
-
-                        markerSuaSplitter.on('dragend', function (e) {
-                            const position = markerSuaSplitter.getLatLng();
-                            document.getElementById('sua_vi_do').value = position.lat;
-                            document.getElementById('sua_kinh_do').value = position.lng;
-                        });
-                    } else {
-                        mapSuaSplitter.invalidateSize();
-                    }
-                });
-                function kiemTraLoaiSplitter() {
-                    var loai = document.getElementById('loai_splitter').value;
-                    var khungCha = document.getElementById('khung_splitter_cha');
-                    if (loai === '1:16') {
-                        khungCha.classList.remove('d-none');
-                    } else {
-                        khungCha.classList.add('d-none');
-                    }
+                    markerSuaSplitter.on('dragend', function (e) {
+                        const position = markerSuaSplitter.getLatLng();
+                        document.getElementById('sua_vi_do').value = position.lat;
+                        document.getElementById('sua_kinh_do').value = position.lng;
+                    });
+                } else {
+                    mapSuaSplitter.invalidateSize();
                 }
+            });
 
-                let mapSplitter;
-                let markerSplitter;
-
-                document.getElementById('modalThemSplitter').addEventListener('shown.bs.modal', function () {
-
-                    if (!mapSplitter) {
-                        const defaultLat = 10.3759;
-                        const defaultLng = 105.4333;
-
-                        mapSplitter = L.map('map-splitter').setView([defaultLat, defaultLng], 14);
-                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                            attribution: '&copy; OpenStreetMap contributors'
-                        }).addTo(mapSplitter);
-
-                        markerSplitter = L.marker([defaultLat, defaultLng], { draggable: true }).addTo(mapSplitter);
-
-                        document.getElementById('vi_do_splitter').value = defaultLat;
-                        document.getElementById('kinh_do_splitter').value = defaultLng;
-
-                        mapSplitter.on('click', function (e) {
-                            const lat = e.latlng.lat;
-                            const lng = e.latlng.lng;
-
-                            markerSplitter.setLatLng([lat, lng]);
-
-                            document.getElementById('vi_do_splitter').value = lat;
-                            document.getElementById('kinh_do_splitter').value = lng;
-                        });
-
-                        markerSplitter.on('dragend', function (e) {
-                            const position = markerSplitter.getLatLng();
-                            document.getElementById('vi_do_splitter').value = position.lat;
-                            document.getElementById('kinh_do_splitter').value = position.lng;
-                        });
-
-                    } else {
-                        mapSplitter.invalidateSize();
-                    }
-                });
-                function capNhatSysID_Splitter() {
-                    const select = document.getElementById('chon_splitter_cha');
-                    const selectedOption = select.options[select.selectedIndex];
-                    const sysId = selectedOption.getAttribute('data-sysid');
-                    const inputSysId = document.getElementById('sys_id_them');
-
-                    if (sysId) {
-                        inputSysId.value = sysId;
-                    } else {
-                        inputSysId.value = 'AGG-LX-01';
-                    }
-                }
-
-                function capNhatSysIDSua_Splitter() {
-                    const select = document.getElementById('sua_splitter_cha_id');
-                    const selectedOption = select.options[select.selectedIndex];
-                    const sysId = selectedOption.getAttribute('data-sysid');
-                    const inputSysId = document.getElementById('sua_sys_id');
-
-                    if (sysId) {
-                        inputSysId.value = sysId;
-                    }
-                }
-                function chuanBiXoaSplitter(id) {
-                    document.getElementById('formXoaSplitter').action = '/quanly/splitter/xoa/' + id;
+            function kiemTraLoaiSplitter() {
+                var loai = document.getElementById('loai_splitter').value;
+                var khungCha = document.getElementById('khung_splitter_cha');
+                if (loai === '1:16') {
+                    khungCha.classList.remove('d-none');
+                } else {
+                    khungCha.classList.add('d-none');
                 }
             }
-            
+
+            let mapSplitter;
+            let markerSplitter;
+
+            document.getElementById('modalThemSplitter').addEventListener('shown.bs.modal', function () {
+                if (!mapSplitter) {
+                    const defaultLat = 10.3759;
+                    const defaultLng = 105.4333;
+
+                    mapSplitter = L.map('map-splitter').setView([defaultLat, defaultLng], 14);
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; OpenStreetMap contributors'
+                    }).addTo(mapSplitter);
+
+                    markerSplitter = L.marker([defaultLat, defaultLng], { draggable: true }).addTo(mapSplitter);
+
+                    document.getElementById('vi_do_splitter').value = defaultLat;
+                    document.getElementById('kinh_do_splitter').value = defaultLng;
+
+                    mapSplitter.on('click', function (e) {
+                        const lat = e.latlng.lat;
+                        const lng = e.latlng.lng;
+                        markerSplitter.setLatLng([lat, lng]);
+
+                        document.getElementById('vi_do_splitter').value = lat;
+                        document.getElementById('kinh_do_splitter').value = lng;
+                    });
+
+                    markerSplitter.on('dragend', function (e) {
+                        const position = markerSplitter.getLatLng();
+                        document.getElementById('vi_do_splitter').value = position.lat;
+                        document.getElementById('kinh_do_splitter').value = position.lng;
+                    });
+                } else {
+                    mapSplitter.invalidateSize();
+                }
+            });
+
+            function capNhatSysID_Splitter() {
+                const select = document.getElementById('chon_splitter_cha');
+                const selectedOption = select.options[select.selectedIndex];
+                const sysId = selectedOption.getAttribute('data-sysid');
+                const inputSysId = document.getElementById('sys_id_them');
+
+                if (sysId) {
+                    inputSysId.value = sysId;
+                } else {
+                    inputSysId.value = 'AGG-LX-01';
+                }
+            }
+
+            function capNhatSysIDSua_Splitter() {
+                const select = document.getElementById('sua_splitter_cha_id');
+                const selectedOption = select.options[select.selectedIndex];
+                const sysId = selectedOption.getAttribute('data-sysid');
+                const inputSysId = document.getElementById('sua_sys_id');
+
+                if (sysId) {
+                    inputSysId.value = sysId;
+                }
+            }
+
+            function chuanBiXoaSplitter(id) {
+                document.getElementById('formXoaSplitter').action = '/quanly/splitter/xoa/' + id + '?page=<%= currentPage %>';
+            }
         </script>
-        
