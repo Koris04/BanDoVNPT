@@ -56,11 +56,17 @@ const connectMongoDB = async () => {
 };
 
 module.exports = { connectMongoDB };--
-5/ Cách để sử dụng file DanhSachGoiCuoc để tải các thông tin về các gói cước (Lưu ý: Người dùng cần phải chạy lệnh Create GoiCuoc để SQL có thể tạo sẵn các cột dữ liệu):
+
+5/ Cách sử dụng file GoiCuoc để tải các thông tin về các gói cước (Lưu ý: Người dùng cần phải chạy lệnh Create GoiCuoc để SQL có thể tạo sẵn các cột dữ liệu):
+
 Bước 1: Kích hoạt SQL Sever Import and Export Wizard. Tại đây, người dùng chọn Data Source là Microsoft Excel tại ô Data source. Cùng lúc đó, người dùng sẽ tìm đến file Excel muốn nhập liệu thông qua Browse rồi chọn Next.
+
 Bước 2: Tiếp đến, trong cửa sổ Choose a destination, người dùng chọn vào mục SQL sever Native Client 11.0.
+
 Bước 3: Khi đã hoàn tất chọn thì giao diện sẽ thay đổi. Lúc này người dùng sẽ cần nhập thêm các thông tin để kết nối với cơ sở dữ liệu. Trong đó bao gồm các trường thông tin như Sever name, loại Authentication và Database.
+
 Bước 4: Kiểm tra lại các thông tin đã nhập ở bước 3 trước khi Next.
+
 Bước 5: Cuối cùng, chọn tạo bản sao hoặc truy vấn tại cửa sổ Specify Table Copy or Query rồi chọn Next để tiếp tục và hoàn tất.
 
 Tài khoản để thầy cô có thể sử dụng để test bài:
