@@ -1,5 +1,4 @@
 node_modules/
 .env
 .env.vnpt
-database.config.json/
-database.js
+database.config.json
