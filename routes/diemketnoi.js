@@ -27,7 +27,7 @@ router.get('/', kiemTraDangNhap, async (req, res) => {
         // Lấy danh sách Điểm kết nối từ MongoDB, có populate thông tin Tủ cấp 2 và sắp xếp theo lần kiểm tra cuối
         const danhSachDiem = await DiemKetNoi.find({})
             .populate('splitter_id')
-            .sort({ 'trang_thai_ket_noi.lan_kiem_tra_cuoi': -1 })
+            .sort({ 'trang_thai_ket_noi.lan_kiem_tra_cuoi': -1, _id: 1 })
             .skip(skip)
             .limit(limit);
 
