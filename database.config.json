@@ -4,16 +4,15 @@
       "server": "localhost",
       "database": "VNPT_BanDo_Admin",
       "user": "sa",
-      "password": "sql2019",
+      "password": "", 
       "options": {
-        "instanceName": "SQLEXPRESS02",
+        "instanceName": "SQLEXPRESS", 
         "encrypt": false,
         "trustServerCertificate": true
-
       }
     },
     "mongodb": {
-      "uri": "mongodb://sa:admin123@ac-xpggvhl-shard-00-00.ep8txj8.mongodb.net:27017,ac-xpggvhl-shard-00-01.ep8txj8.mongodb.net:27017,ac-xpggvhl-shard-00-02.ep8txj8.mongodb.net:27017/VNPT_Mapping?ssl=true&replicaSet=atlas-b0h1nv-shard-0&authSource=admin&appName=VNPT_Mapping"
+      "uri": "mongodb://localhost:27017/VNPT_Mapping"
     }
   },
   "production": {
@@ -21,15 +20,15 @@
       "server": "localhost",
       "database": "VNPT_BanDo_Admin",
       "user": "sa",
-      "password": "sql2019",
+      "password": "",
       "options": {
-        "instanceName": "SQLEXPRESS02",
+        "instanceName": "SQLEXPRESS",
         "encrypt": false,
         "trustServerCertificate": true
       }
     },
     "mongodb": {
-      "uri": "mongodb://sa:admin123@ac-xpggvhl-shard-00-00.ep8txj8.mongodb.net:27017,ac-xpggvhl-shard-00-01.ep8txj8.mongodb.net:27017,ac-xpggvhl-shard-00-02.ep8txj8.mongodb.net:27017/VNPT_Mapping?ssl=true&replicaSet=atlas-b0h1nv-shard-0&authSource=admin&appName=VNPT_Mapping"
+      "uri": "mongodb://localhost:27017/VNPT_Mapping"
     }
   }
 }
