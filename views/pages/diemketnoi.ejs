@@ -472,8 +472,10 @@
                     const defaultLng = 105.4333;
 
                     mapThem = L.map('map-them').setView([defaultLat, defaultLng], 14);
-                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        attribution: '&copy; OpenStreetMap contributors'
+                    L.tileLayer('http://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+                        maxZoom: 20,
+                        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+                        attribution: '© Google Maps'
                     }).addTo(mapThem);
 
                     markerThem = L.marker([defaultLat, defaultLng], { draggable: true }).addTo(mapThem);
@@ -596,8 +598,10 @@
             document.getElementById('modalSuaDiem').addEventListener('shown.bs.modal', function () {
                 if (!mapSuaDiem) {
                     mapSuaDiem = L.map('map-sua-diem').setView([currentLatSuaDiem, currentLngSuaDiem], 17);
-                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        attribution: '&copy; OpenStreetMap'
+                    L.tileLayer('http://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+                        maxZoom: 20,
+                        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+                        attribution: '© Google Maps'
                     }).addTo(mapSuaDiem);
 
                     markerSuaDiem = L.marker([currentLatSuaDiem, currentLngSuaDiem], { draggable: true }).addTo(mapSuaDiem);

@@ -19,7 +19,7 @@ router.get('/', kiemTraDangNhap, async (req, res) => {
 
         const danhSachSplitter = await Splitter.find({})
             .populate('splitter_cha_id')
-            .sort({ sys_id: 1, loai_splitter: 1 })
+            .sort({ sys_id: 1, loai_splitter: 1, _id: 1 })
             .skip(skip)
             .limit(limit);
 

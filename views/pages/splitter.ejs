@@ -322,7 +322,7 @@
                 document.getElementById('sua_vi_do').value = lat;
                 document.getElementById('sua_kinh_do').value = lng;
                 document.getElementById('sua_trang_thai').value = trangThai || 'Hoạt động';
-                
+
                 document.getElementById('sua_splitter_cha_id').value = cha_id || '';
 
                 kiemTraLoaiSplitterSua();
@@ -342,8 +342,10 @@
             document.getElementById('modalSuaSplitter').addEventListener('shown.bs.modal', function () {
                 if (!mapSuaSplitter) {
                     mapSuaSplitter = L.map('map-splitter-sua').setView([currentLatSua, currentLngSua], 17);
-                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        attribution: '&copy; OpenStreetMap'
+                    L.tileLayer('http://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+                        maxZoom: 20,
+                        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+                        attribution: '© Google Maps'
                     }).addTo(mapSuaSplitter);
 
                     markerSuaSplitter = L.marker([currentLatSua, currentLngSua], { draggable: true }).addTo(mapSuaSplitter);
@@ -383,9 +385,12 @@
                     const defaultLng = 105.4333;
 
                     mapSplitter = L.map('map-splitter').setView([defaultLat, defaultLng], 14);
-                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        attribution: '&copy; OpenStreetMap contributors'
+                    L.tileLayer('http://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+                        maxZoom: 20,
+                        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+                        attribution: '© Google Maps'
                     }).addTo(mapSplitter);
+
 
                     markerSplitter = L.marker([defaultLat, defaultLng], { draggable: true }).addTo(mapSplitter);
 
